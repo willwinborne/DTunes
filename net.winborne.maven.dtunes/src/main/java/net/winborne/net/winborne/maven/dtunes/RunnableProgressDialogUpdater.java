@@ -1,26 +1,51 @@
 package net.winborne.net.winborne.maven.dtunes;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.Scanner;
 
 public class RunnableProgressDialogUpdater implements Runnable {
 
+	private BufferedReader br;
+
+	@Override
 	public void run() {
-		System.out.println("RPDU runnable created");
-		Scanner sc = new Scanner(new File("log.txt"));
-        while(sc.hasNextLine()){
-            System.out.println(sc.nextLine());
-        }
-		String line = ;
+		System.out.println("Runnable fired");
+		File file = new File("youtube-dl-log.txt");
+
 		try {
-			line = reader.readLine();
-			System.out.println(line);
+			br = new BufferedReader(new FileReader(file));
+		} catch (FileNotFoundException e1) {
+			e1.printStackTrace();
+		}
+
+		String last = "";
+		String line = "";
+		try {
+			while ((line = br.readLine()) != null) {
+				last = line;
+				System.out.println(last);
+				char[] lastArray = last.toCharArray();
+				String progress = "";
+				if (last.length()>0) {
+					for (int i = 12; i <= 15; i++) {
+						progress += lastArray[i];
+					}
+				}
+				
+				System.out.println("Extracted progress: " + progress);
+				DTunesProgressDialog.setProgress(progress);
+			}
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//System.out.println(last);
+		
 	}
 }

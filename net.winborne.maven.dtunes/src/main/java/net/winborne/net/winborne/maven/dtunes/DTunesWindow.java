@@ -17,9 +17,13 @@ import javax.swing.SwingConstants;
 import javax.swing.JLabel;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.ProcessBuilder.Redirect;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
@@ -30,6 +34,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.ListModel;
 import javax.swing.border.SoftBevelBorder;
+
+import org.apache.logging.log4j.core.util.IOUtils;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
@@ -47,34 +54,30 @@ public class DTunesWindow extends JFrame {
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
 	private static Process process;
-
-	public static void setProgressThruWindow(double progressIn) {
-		frame.setProgress(progressIn);
-	}
-
+	
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
 	 * directory.
 	 */
-	private Boolean downloadSongFromYouTube(String url) {
+	private Boolean downloadSongFromYouTube(String url) throws FileNotFoundException, UnsupportedEncodingException {
 		System.out.println("Downloading from YouTube with URL: " + url);
 
+		File file = new File("youtube-dl-log.txt");
 		
 		ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c",
-				"youtube-dl.exe " + "https://www.youtube.com/watch?v=XOzs1FehYOA" + " -x");
-		new PrintWriter("the-file-name.txt", "UTF-8")
-		processBuilder.redirectOutput();
+				"youtube-dl.exe " + "https://www.youtube.com/watch?v=XOzs1FehYOA" + " -x").redirectOutput(Redirect.to(file));
 		try {
-			
-			process = processBuilder.start();
-		} catch (IOException e1) {
+			Process process = processBuilder.start();
+
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			e.printStackTrace();
 		}
 
 		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
+		rpdu.run();
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(rpdu, 0, 100, TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(rpdu, 0, 250, TimeUnit.MILLISECONDS);
 		return true;
 	}
 
@@ -175,7 +178,15 @@ public class DTunesWindow extends JFrame {
 					}
 				});
 
-				downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
+				try {
+					downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 

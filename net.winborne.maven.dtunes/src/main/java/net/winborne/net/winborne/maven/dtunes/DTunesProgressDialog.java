@@ -10,7 +10,8 @@ import javax.swing.JProgressBar;
 public class DTunesProgressDialog extends JFrame {
 
 	private JPanel contentPane;
-	private double progress = 0;
+	private static double progress = 0;
+	private static JProgressBar progressBar;
 
 	/**
 	 * Launch the application.
@@ -40,14 +41,26 @@ public class DTunesProgressDialog extends JFrame {
 
 		setContentPane(contentPane);
 		
-		JProgressBar progressBar = new JProgressBar();
+		progressBar = new JProgressBar();
 		contentPane.add(progressBar);
 		
 		
 	}
 	
-	public void setProgress(double progressIn) {
-		progress = progressIn;
+	public static void setProgress(String progressIn) {
+		System.out.println("setting progress..");
+		
+		try {
+			progress = Double.parseDouble(progressIn);
+			progressBar.setValue((int) Math.round(Double.parseDouble(progressIn)));
+		} catch (Exception e) {
+			System.out.println("Streaming letters, probably.");
+		}
+		
+	}
+	
+	public static double getProgress() {
+		return progress;
 	}
 
 }
