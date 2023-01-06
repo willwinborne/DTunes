@@ -90,7 +90,7 @@ public class DTunesWindow extends JFrame {
 	 */
 	private static Boolean convertSongFromWebmToMp3(String filename) {
 		boolean succeeded = true;
-		ConvertProgressListener listener = new ConvertProgressListener();
+		ConvertProgressDialogUpdater listener = new ConvertProgressDialogUpdater();
 
 		try {
 			File source = new File("Bush - Glycerine-hOllF3TgAsM.webm");
