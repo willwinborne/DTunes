@@ -12,6 +12,7 @@ import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import javax.swing.JList;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.SwingConstants;
 import javax.swing.JLabel;
@@ -47,6 +48,13 @@ import ws.schild.jave.encode.EncodingAttributes;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.JSeparator;
+import java.awt.Color;
+import javax.swing.JTabbedPane;
+import javax.swing.border.MatteBorder;
+import java.awt.GridLayout;
+import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
 
 public class DTunesWindow extends JFrame {
 
@@ -54,7 +62,7 @@ public class DTunesWindow extends JFrame {
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
 	private static Process process;
-	
+
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
 	 * directory.
@@ -63,9 +71,10 @@ public class DTunesWindow extends JFrame {
 		System.out.println("Downloading from YouTube with URL: " + url);
 
 		File file = new File("youtube-dl-log.txt");
-		
+
 		ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c",
-				"youtube-dl.exe " + "https://www.youtube.com/watch?v=XOzs1FehYOA" + " -x").redirectOutput(Redirect.to(file));
+				"youtube-dl.exe " + "https://www.youtube.com/watch?v=XOzs1FehYOA" + " -x")
+				.redirectOutput(Redirect.to(file));
 		try {
 			Process process = processBuilder.start();
 
@@ -84,7 +93,7 @@ public class DTunesWindow extends JFrame {
 	public static Process getProcess() {
 		return process;
 	}
-	
+
 	/**
 	 * Convert the downloaded song into an mp3
 	 */
@@ -139,63 +148,85 @@ public class DTunesWindow extends JFrame {
 		listModel.addElement("USA");
 		listModel.addElement("USB");
 		listModel.addElement("USC");
-		contentPane.setLayout(new MigLayout("", "[:140px:140px][25px:n:25px][::100px]", "[1px][498px]"));
+		contentPane.setLayout(new MigLayout("", "[:140px:140px][25px:n:25px][::100px][][][][][][][][][][][][][]", "[1px][498px]"));
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
-		final JButton btnNewButton = new JButton("  Add from file...  ");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				convertSongFromWebmToMp3("hi");
-				System.out.println("button clicked");
-				// In response to a button click:
-				// final JFileChooser fc = new JFileChooser();
-				// int returnVal = fc.showOpenDialog(btnNewButton);
-			}
-		});
-		contentPane.add(btnNewButton, "flowy,cell 0 1");
+		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane.setPreferredSize(new Dimension(1000, 1000));
+		JPanel singlePanel = new JPanel();
+		JPanel bulkPanel = new JPanel();
+		tabbedPane.add("Single", singlePanel);
+		
+		JPanel panel = new JPanel();
+		singlePanel.add(panel);
+				panel.setLayout(new GridLayout(0, 1, 0, 0));
+		
+				final JButton btnNewButton = new JButton("  Add from file...  ");
+				panel.add(btnNewButton);
+				
+						JButton btnNewButton_1 = new JButton("Add songs from YouTube...");
+						panel.add(btnNewButton_1);
+						btnNewButton_1.addActionListener(new ActionListener() {
+							public void actionPerformed(ActionEvent e) {
+								EventQueue.invokeLater(new Runnable() {
+									public void run() {
+										try {
+											frame = new DTunesProgressDialog();
+											frame.setVisible(true);
+										} catch (Exception e) {
+											e.printStackTrace();
+										}
+									}
+								});
 
-		JList<String> list = new JList<String>((ListModel) listModel);
-		list.setVisibleRowCount(50);
-		list.setFixedCellHeight(12);
-		list.setFixedCellWidth(500);
-		Dimension d = new Dimension(300, 470);
-		list.setMinimumSize(d);
-
-		list.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		contentPane.add(list, "flowx,cell 2 1");
-
-		JButton btnNewButton_1 = new JButton("Add from YouTube...");
-		btnNewButton_1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				EventQueue.invokeLater(new Runnable() {
-					public void run() {
-						try {
-							frame = new DTunesProgressDialog();
-							frame.setVisible(true);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+								try {
+									downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
+								} catch (FileNotFoundException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								} catch (UnsupportedEncodingException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+							}
+						});
+				btnNewButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						convertSongFromWebmToMp3("hi");
+						System.out.println("button clicked");
+						// In response to a button click:
+						// final JFileChooser fc = new JFileChooser();
+						// int returnVal = fc.showOpenDialog(btnNewButton);
 					}
 				});
-
-				try {
-					downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		});
-
-		contentPane.add(btnNewButton_1, "cell 0 1");
-
-		JLabel lblNewLabel = new JLabel("Song count: " + Integer.toString(listModel.size()));
-		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		contentPane.add(lblNewLabel, "cell 2 1,alignx right,growy");
+		tabbedPane.add("Bulk", bulkPanel);
+		
+		JPanel panel_1 = new JPanel();
+		bulkPanel.add(panel_1);
+		panel_1.setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JButton btnNewButton_2 = new JButton("  Add song from file...  ");
+		panel_1.add(btnNewButton_2);
+		
+		JButton btnNewButton_1_1 = new JButton("Add song from YouTube...");
+		panel_1.add(btnNewButton_1_1);
+		tabbedPane.setBorder(new MatteBorder(1, 1, 1, 1, (Color) new Color(0, 0, 0)));
+		contentPane.add(tabbedPane, "flowy,cell 0 1,alignx center");
+		Dimension d = new Dimension(300, 470);
+																				
+																						JList<String> list = new JList<String>((ListModel) listModel);
+																						list.setVisibleRowCount(50);
+																						list.setFixedCellHeight(12);
+																						list.setFixedCellWidth(500);
+																						list.setMinimumSize(d);
+																						
+																								list.setBorder(new LineBorder(new Color(0, 0, 0)));
+																								contentPane.add(list, "cell 12 1");
+																		
+																				JLabel lblNewLabel = new JLabel("Song count: " + Integer.toString(listModel.size()));
+																				lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
+																				lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+																				contentPane.add(lblNewLabel, "cell 15 1,alignx right,growy");
 
 	}
 

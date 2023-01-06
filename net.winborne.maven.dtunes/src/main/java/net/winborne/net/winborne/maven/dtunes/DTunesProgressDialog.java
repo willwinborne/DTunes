@@ -12,6 +12,7 @@ public class DTunesProgressDialog extends JFrame {
 	private JPanel contentPane;
 	private static double progress = 0;
 	private static JProgressBar progressBar;
+	private static DTunesProgressDialog frame;
 
 	/**
 	 * Launch the application.
@@ -20,7 +21,7 @@ public class DTunesProgressDialog extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DTunesProgressDialog frame = new DTunesProgressDialog();
+					frame = new DTunesProgressDialog();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,7 +34,7 @@ public class DTunesProgressDialog extends JFrame {
 	 * Create the frame.
 	 */
 	public DTunesProgressDialog() {
-		setTitle("Downloading song... (0%)");
+		setTitle("Downloading song...");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 450, 100);
 		contentPane = new JPanel();
@@ -47,18 +48,24 @@ public class DTunesProgressDialog extends JFrame {
 		
 	}
 	
+	/**
+	 * Update the progress bar of the song that is downloading.
+	 * @param progressIn
+	 */
 	public static void setProgress(String progressIn) {
-		System.out.println("setting progress..");
-		
 		try {
 			progress = Double.parseDouble(progressIn);
 			progressBar.setValue((int) Math.round(Double.parseDouble(progressIn)));
 		} catch (Exception e) {
-			System.out.println("Streaming letters, probably.");
+			//System.out.println("Streaming letters, probably...");
 		}
 		
 	}
 	
+	/**
+	 * Return the progress of the song that is downloading.
+	 * @return
+	 */
 	public static double getProgress() {
 		return progress;
 	}
