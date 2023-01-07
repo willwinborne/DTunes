@@ -242,7 +242,7 @@ public class DTunesWindow extends JFrame {
 
 		Object[][] data = { { "N/A", "No songs added!", "N/A", "N/A" }, };
 
-		String[] columnNames = { "#", "Title", "URL", "Filetype" };
+		String[] columnNames = { "#", "Title", "URL / Video ID", "Filetype" };
 		model = new DefaultTableModel(data, columnNames); 
 		table = new JTable(model) {
 			public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -260,8 +260,8 @@ public class DTunesWindow extends JFrame {
 		TableColumn column = null;
 		for (int i = 0; i < 3; i++) {
 			column = table.getColumnModel().getColumn(i);
-			if (i == 2) {
-				column.setPreferredWidth(200);
+			if (i == 2 || i == 3) {
+				column.setPreferredWidth(100);
 			}
 			if (i == 1) {
 				column.setPreferredWidth(500);

@@ -32,7 +32,6 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 				if (line.contains("Destination")) {
-					System.out.println("LINE CONTAINS DEST ABOVE!");
 					char[] lastArray = line.toCharArray();
 					String videoID = DTunesYouTubeLinkDialog.returnLink();
 					int ytdlTagIndex = line.indexOf("Destination");

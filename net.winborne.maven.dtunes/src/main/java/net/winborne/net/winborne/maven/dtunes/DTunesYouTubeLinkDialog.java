@@ -165,7 +165,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 			// do nothing
 		} else {
 			System.out.println("user chose yes");
-			DTunesWindow.saveSong(videoTitleIn, textField.getText());
+			DTunesWindow.saveSong(videoTitle, videoID);
 			textField.setText("");
 		}
 	}
