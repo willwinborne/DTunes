@@ -179,6 +179,7 @@ public class DTunesWindow extends JFrame {
 		panel.add(lblNewLabel_1, "cell 0 3");
 
 		JButton btnNewButton_1 = new JButton("Add songs from YouTube...");
+		btnNewButton_1.setPreferredSize(new Dimension(100, 20));
 		panel.add(btnNewButton_1, "cell 0 4");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -200,6 +201,7 @@ public class DTunesWindow extends JFrame {
 		panel.add(lblNewLabel_2, "cell 0 6");
 
 		JButton btnNewButton_3 = new JButton("Download YouTube songs");
+		btnNewButton_3.setPreferredSize(new Dimension(100, 20));
 		panel.add(btnNewButton_3, "cell 0 7");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -229,6 +231,7 @@ public class DTunesWindow extends JFrame {
 		panel.add(lblNewLabel_3, "cell 0 9");
 
 		JButton btnNewButton_2 = new JButton("Apply playlist!");
+		btnNewButton_2.setPreferredSize(new Dimension(100, 20));
 		panel.add(btnNewButton_2, "cell 0 10");
 
 		JLabel lblNewLabel_4 = new JLabel("");

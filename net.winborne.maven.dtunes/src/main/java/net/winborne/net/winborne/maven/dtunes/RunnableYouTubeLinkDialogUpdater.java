@@ -35,7 +35,6 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 					System.out.println("LINE CONTAINS DEST ABOVE!");
 					char[] lastArray = line.toCharArray();
 					String videoID = DTunesYouTubeLinkDialog.returnLink();
-					//TODO: bug when adding multiple videos
 					int ytdlTagIndex = line.indexOf("Destination");
 					int videoIDIndex = line.indexOf(videoID);
 					String title = "";
@@ -44,15 +43,6 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 					}
 					DTunesYouTubeLinkDialog.setVideoTitle(title);
 					DTunesYouTubeLinkDialog.killProcess();
-					
-				    File myObj = new File("youtube-dl-log.txt"); 
-				    if (myObj.delete()) { 
-				      System.out.println("Deleted the file: " + myObj.getName());
-				    } else {
-				      System.out.println("Failed to delete the file.");
-				    } 	
-				} else {
-					System.out.println(line);
 				}
 			}
 		} catch (IOException e) {

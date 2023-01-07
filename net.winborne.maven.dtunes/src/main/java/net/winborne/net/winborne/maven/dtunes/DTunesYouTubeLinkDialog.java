@@ -6,17 +6,27 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import org.apache.commons.io.FileUtils;
+
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import java.awt.GridLayout;
+import java.awt.Image;
+
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ProcessBuilder.Redirect;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -34,6 +44,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	private static ScheduledExecutorService executor;
 	private static String videoID = "";
 	private static String videoTitle = "";
+	private JLabel lblNewLabel_1;
 
 	/**
 	 * Launch the application.
@@ -58,7 +69,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	public DTunesYouTubeLinkDialog() {
 		setTitle("Add YouTube link to queue");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 450, 140);
+		setBounds(100, 100, 390, 160);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -66,9 +77,15 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		contentPane.setLayout(new MigLayout("", "[424px]", "[25][25][25]"));
 
 		JLabel lblNewLabel = new JLabel("Enter YouTube link to add song to the download queue:");
-		contentPane.add(lblNewLabel, "cell 0 0,grow");
+		contentPane.add(lblNewLabel, "flowx,cell 0 0,grow");
 
+		ClassLoader cldr = this.getClass().getClassLoader();
+	    URL imageURL   = cldr.getResource("spinner.gif");
+	    ImageIcon imageIcon = new ImageIcon(imageURL);
+		
+		
 		textField = new JTextField();
+		textField.setMaximumSize(new Dimension(325,20));
 		contentPane.add(textField, "cell 0 1,grow");
 		textField.setColumns(10);
 
@@ -78,6 +95,11 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
+		JLabel iconLabel = new JLabel();
+		iconLabel.setPreferredSize(new Dimension(10, 10));
+		iconLabel.setIcon(imageIcon);
+		imageIcon.setImageObserver(iconLabel);
+		contentPane.add(iconLabel, "cell 1 1");
 		contentPane.add(button, "flowx,cell 0 2,grow");
 
 		btnNewButton = new JButton("Done");
