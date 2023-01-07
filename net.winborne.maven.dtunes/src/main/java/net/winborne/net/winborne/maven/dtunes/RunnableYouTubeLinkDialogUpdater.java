@@ -15,7 +15,8 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 	private BufferedReader br;
 
 	// Determines when the title of the YouTube video has been retrieved
-	// once the title is retrieved, the process is killed, this runnable is destroyed
+	// once the title is retrieved, the process is killed, this runnable is
+	// destroyed
 	// then the trimmed title is passed back to the YouTubeLinkDialog.
 	@Override
 	public void run() {
@@ -39,7 +40,7 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 					for (int i = 24; i < videoIDIndex - 1; i++) {
 						title += lastArray[i];
 					}
-					
+
 					DTunesYouTubeLinkDialog.killProcess();
 					DTunesYouTubeLinkDialog.setVideoTitle(title);
 				}

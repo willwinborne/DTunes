@@ -17,13 +17,11 @@ public class RunnableProgressDialogUpdater implements Runnable {
 	@Override
 	public void run() {
 		File file = new File("youtube-dl-log.txt");
-
 		try {
 			br = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-
 		String last = "";
 		String line = "";
 		try {
@@ -31,18 +29,16 @@ public class RunnableProgressDialogUpdater implements Runnable {
 				last = line;
 				char[] lastArray = last.toCharArray();
 				String progress = "";
-				if (last.length()>0) {
+				if (last.length() > 0) {
 					for (int i = 12; i <= 15; i++) {
 						progress += lastArray[i];
 					}
 				}
 				DTunesProgressDialog.setProgress(progress);
-				
+
 				if (progress == "100") {
-					
+
 				}
-				
-				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

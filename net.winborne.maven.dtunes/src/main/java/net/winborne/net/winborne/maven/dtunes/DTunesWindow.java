@@ -22,6 +22,7 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
@@ -41,7 +42,8 @@ public class DTunesWindow extends JFrame {
 	private static DTunesProgressDialog frame;
 	private static DTunesYouTubeLinkDialog frame2;
 	private static Process process;
-	private JTable table;
+	private static JTable table;
+	private static DefaultTableModel model;
 
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
@@ -65,8 +67,12 @@ public class DTunesWindow extends JFrame {
 		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
 		rpdu.run();
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(rpdu, 0, 250, TimeUnit.MILLISECONDS);
+		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 		return true;
+	}
+	
+	public static void saveSong(String songTitle, String songURL) {
+		model.addRow(new Object[]{table.getRowCount(), songTitle, songURL, ".m4a"});
 	}
 
 	/**
@@ -96,7 +102,7 @@ public class DTunesWindow extends JFrame {
 			// Encode
 			Encoder encoder = new Encoder();
 			encoder.encode(new MultimediaObject(source), target, attrs, listener);
-
+ 
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			succeeded = false;
@@ -152,7 +158,8 @@ public class DTunesWindow extends JFrame {
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[120px][32px][117px][165px]", "[][10][][][][][25][][][][25][][][][][][][][][][][]"));
+		panel.setLayout(
+				new MigLayout("", "[120px][32px][117px][165px]", "[][][][][][][][][][][][][][][][][][][][][][]"));
 
 		JLabel lblNewLabel_5 = new JLabel("DPLAYER Companion");
 		panel.add(lblNewLabel_5, "cell 0 0");
@@ -160,20 +167,8 @@ public class DTunesWindow extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("Step 1: Import your songs");
 		panel.add(lblNewLabel_1, "cell 0 3");
 
-		final JButton btnNewButton = new JButton("Add songs from file...");
-		panel.add(btnNewButton, "cell 0 4");
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				convertSongFromWebmToMp3("hi");
-				System.out.println("button clicked");
-				// In response to a button click:
-				// final JFileChooser fc = new JFileChooser();
-				// int returnVal = fc.showOpenDialog(btnNewButton);
-			}
-		});
-
 		JButton btnNewButton_1 = new JButton("Add songs from YouTube...");
-		panel.add(btnNewButton_1, "cell 0 5");
+		panel.add(btnNewButton_1, "cell 0 4");
 		btnNewButton_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -191,10 +186,10 @@ public class DTunesWindow extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Step 2: Download from YouTube");
 
-		panel.add(lblNewLabel_2, "cell 0 7");
+		panel.add(lblNewLabel_2, "cell 0 6");
 
 		JButton btnNewButton_3 = new JButton("Download YouTube songs");
-		panel.add(btnNewButton_3, "cell 0 8");
+		panel.add(btnNewButton_3, "cell 0 7");
 		btnNewButton_3.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EventQueue.invokeLater(new Runnable() {
@@ -219,63 +214,53 @@ public class DTunesWindow extends JFrame {
 			}
 		});
 
-		JButton btnNewButton_5 = new JButton("Convert and apply playlist to DPLAYER");
-		panel.add(btnNewButton_5, "cell 0 9");
-		btnNewButton_5.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-
 		JLabel lblNewLabel_3 = new JLabel("Step 3: Apply to DPLAYER");
-		panel.add(lblNewLabel_3, "cell 0 11");
+		panel.add(lblNewLabel_3, "cell 0 9");
 
 		JButton btnNewButton_2 = new JButton("Apply playlist!");
-		panel.add(btnNewButton_2, "cell 0 12");
+		panel.add(btnNewButton_2, "cell 0 10");
 
 		JLabel lblNewLabel_4 = new JLabel("");
 		panel.add(lblNewLabel_4, "cell 0 16");
-		
-				JPanel panel_1 = new JPanel();
-				contentPane.add(panel_1, "cell 1 0");
- 
-				Object[][] data = {{"N/A", "No songs added!", "N/A", "N/A"},};
-				
-				String[] columnNames = {"#", "Title", "URL", "Length"};
-				
-				table = new JTable(data, columnNames) {
-			    public boolean editCellAt(int row, int column, java.util.EventObject e) {
-			        return false;
-			     }
-				};
-				
-				table.setFillsViewportHeight(true);
-				JScrollPane scrollPane = new JScrollPane(table);
-				table.setFillsViewportHeight(true);
-				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-				centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-				table.setPreferredScrollableViewportSize( new Dimension(2000,2000) );
-				TableColumn column = null;
-				for (int i = 0; i < 3; i++) {
-				    column = table.getColumnModel().getColumn(i);
-				    if (i == 2) {
-				        column.setPreferredWidth(200);
-				    }
-				    if (i == 1) {
-				        column.setPreferredWidth(500);
-				    }
-				    
-				    if (i == 0) {
-				    	column.setPreferredWidth(50);
-				    }
-				}
-				panel_1.setLayout(new GridLayout(1, 0, 0, 0));
-				
-				
-				panel_1.add(scrollPane);
+
+		JPanel panel_1 = new JPanel();
+		contentPane.add(panel_1, "cell 1 0");
+
+		Object[][] data = { { "N/A", "No songs added!", "N/A", "N/A" }, };
+
+		String[] columnNames = { "#", "Title", "URL", "Filetype" };
+		model = new DefaultTableModel(data, columnNames); 
+		table = new JTable(model) {
+			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+				return false;
+			}
+		};
+
+		table.setFillsViewportHeight(true);
+		JScrollPane scrollPane = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table.setPreferredScrollableViewportSize(new Dimension(2000, 2000));
+		TableColumn column = null;
+		for (int i = 0; i < 3; i++) {
+			column = table.getColumnModel().getColumn(i);
+			if (i == 2) {
+				column.setPreferredWidth(200);
+			}
+			if (i == 1) {
+				column.setPreferredWidth(500);
+			}
+
+			if (i == 0) {
+				column.setPreferredWidth(50);
+			}
+		}
+		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
+
+		panel_1.add(scrollPane);
 
 	}
-	
-
 
 }

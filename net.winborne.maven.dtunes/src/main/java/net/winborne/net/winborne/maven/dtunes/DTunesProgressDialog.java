@@ -29,7 +29,6 @@ public class DTunesProgressDialog extends JFrame {
 			}
 		});
 	}
-
 	/**
 	 * Create the frame.
 	 */
@@ -39,13 +38,9 @@ public class DTunesProgressDialog extends JFrame {
 		setBounds(100, 100, 450, 100);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
-		
 		progressBar = new JProgressBar();
 		contentPane.add(progressBar);
-		
-		
 	}
 	
 	/**
@@ -59,7 +54,6 @@ public class DTunesProgressDialog extends JFrame {
 		} catch (Exception e) {
 			//System.out.println("Streaming letters, probably...");
 		}
-		
 	}
 	
 	/**
@@ -69,5 +63,4 @@ public class DTunesProgressDialog extends JFrame {
 	public static double getProgress() {
 		return progress;
 	}
-
 }
