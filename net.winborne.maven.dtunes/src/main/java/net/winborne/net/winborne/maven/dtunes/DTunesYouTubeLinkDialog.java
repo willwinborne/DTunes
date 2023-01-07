@@ -114,8 +114,12 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 
 	// kill the runnable and the youtube-dl process
 	public static void killProcess() {
-		System.out.println("Title retrieved, killing process...");
-		process.destroyForcibly();
+		try {
+			Runtime.getRuntime().exec("taskkill /F /IM youtube-dl.exe");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		executor.shutdown();
 	}
 

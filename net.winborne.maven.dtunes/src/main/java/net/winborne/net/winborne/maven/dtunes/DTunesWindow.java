@@ -71,8 +71,19 @@ public class DTunesWindow extends JFrame {
 		return true;
 	}
 	
+	/**
+	 * Save a song that has been downloaded to the JList.
+	 */
 	public static void saveSong(String songTitle, String songURL) {
-		model.addRow(new Object[]{table.getRowCount(), songTitle, songURL, ".m4a"});
+		
+		if (table.getValueAt(0,1) == "No songs added!") {
+			model.removeRow(0);
+			model.insertRow(0, new Object[]{table.getRowCount() + 1, songTitle, songURL, ".m4a"});
+			return;
+		}
+		
+		
+		model.addRow(new Object[]{table.getRowCount() + 1, songTitle, songURL, ".m4a"});
 	}
 
 	/**

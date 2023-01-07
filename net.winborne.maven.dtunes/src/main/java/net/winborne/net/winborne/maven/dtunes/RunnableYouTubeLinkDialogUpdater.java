@@ -26,25 +26,33 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
 		}
-
-		String last = "";
+		String content = "";
 		String line = "";
 		try {
 			while ((line = br.readLine()) != null) {
-				last = line;
-				if (last.contains("Destination")) {
-					char[] lastArray = last.toCharArray();
+				content += line + "+++___";
+			}
+				if (content.contains("Destination")) {
+					char[] lastArray = content.toCharArray();
 					String videoID = DTunesYouTubeLinkDialog.returnLink();
-					int videoIDIndex = last.indexOf(videoID);
+					//TODO: bug when adding multiple videos, now it's when adding single videos too
+					int nextLineIndex = content.indexOf("+++___");
+					int videoIDIndex = content.indexOf(videoID);
 					String title = "";
 					for (int i = 24; i < videoIDIndex - 1; i++) {
 						title += lastArray[i];
 					}
-
-					DTunesYouTubeLinkDialog.killProcess();
 					DTunesYouTubeLinkDialog.setVideoTitle(title);
+					
+					DTunesYouTubeLinkDialog.killProcess();
+					
+				    File myObj = new File("youtube-dl-log.txt"); 
+				    if (myObj.delete()) { 
+				      System.out.println("Deleted the file: " + myObj.getName());
+				    } else {
+				      System.out.println("Failed to delete the file.");
+				    } 	
 				}
-			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
