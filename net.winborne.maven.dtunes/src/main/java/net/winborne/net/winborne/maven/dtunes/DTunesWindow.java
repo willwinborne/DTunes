@@ -58,6 +58,9 @@ import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.AbstractListModel;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
 
 public class DTunesWindow extends JFrame {
 
@@ -66,6 +69,7 @@ public class DTunesWindow extends JFrame {
 	private static DTunesProgressDialog frame;
 	private static DTunesYouTubeLinkDialog frame2;
 	private static Process process;
+	private JTable table;
 
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
@@ -171,8 +175,7 @@ public class DTunesWindow extends JFrame {
 		listModel.addElement("USB");
 		listModel.addElement("USC");
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		contentPane.setLayout(new MigLayout("", "[46px,grow][184px][300px][67px]",
-				"[][][][][][][][][][][100][][][][][][][][][][][][][][100][100][][100,grow]"));
+		contentPane.setLayout(new MigLayout("", "[46px,grow][184px][300px][67px]", "[]"));
 		Dimension d = new Dimension(300, 470);
 
 		JPanel panel = new JPanel();
@@ -260,24 +263,52 @@ public class DTunesWindow extends JFrame {
 
 		JLabel lblNewLabel_4 = new JLabel("");
 		panel.add(lblNewLabel_4, "cell 0 16");
-
-		JList<String> list = new JList<String>((ListModel) listModel);
-		contentPane.add(list, "cell 1 0");
-		list.setVisibleRowCount(50);
-		list.setFixedCellHeight(12);
-		list.setFixedCellWidth(500);
-		list.setMinimumSize(d);
-
-		list.setBorder(new LineBorder(new Color(0, 0, 0)));
-
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, "flowx,cell 2 27");
-		panel_1.setLayout(new MigLayout("", "[1px]", "[][1px]"));
-
-		JLabel lblNewLabel = new JLabel("Song count: " + Integer.toString(listModel.size()));
-		lblNewLabel.setVerticalAlignment(SwingConstants.BOTTOM);
-		lblNewLabel.setHorizontalAlignment(SwingConstants.RIGHT);
-		contentPane.add(lblNewLabel, "cell 3 27,alignx right,growy");
+		
+				JPanel panel_1 = new JPanel();
+				contentPane.add(panel_1, "cell 1 0 2 1");
+				panel_1.setLayout(new MigLayout("", "[grow][1px]", "[][grow][1px]"));
+				Object[][] data = {
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+						{"0", "b", ".com", "0"},
+				
+				};
+				String[] columnNames = {"#", "Title", "URL", "Length"};
+				
+				
+				table = new JTable(data, columnNames);
+				table.setFillsViewportHeight(true);
+				JScrollPane scrollPane = new JScrollPane(table);
+				table.setFillsViewportHeight(true);
+				
+				panel_1.add(scrollPane, "cell 0 1 2 1,grow");
 
 	}
 
