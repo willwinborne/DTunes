@@ -46,7 +46,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	private static String videoTitle = "";
 	private JLabel lblNewLabel_1;
 	private static JLabel iconLabel;
-	
+
 	/**
 	 * Launch the application.
 	 */
@@ -81,31 +81,17 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		contentPane.add(lblNewLabel, "flowx,cell 0 0,grow");
 
 		ClassLoader cldr = this.getClass().getClassLoader();
-	    URL imageURL = cldr.getResource("spinner.gif");
-	    ImageIcon imageIcon = new ImageIcon(imageURL);
-		
-		
+		URL imageURL = cldr.getResource("spinner.gif");
+		ImageIcon imageIcon = new ImageIcon(imageURL);
+
 		textField = new JTextField();
-		textField.setMaximumSize(new Dimension(325,20));
+		textField.setMaximumSize(new Dimension(325, 20));
 		contentPane.add(textField, "cell 0 1,grow");
 		textField.setColumns(10);
 
-		button = new JButton("Add another song...");
+		button = new JButton("Add song...");
 		button.setPreferredSize(new Dimension(100, 100));
 		button.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			}
-		});
-		iconLabel = new JLabel();
-		iconLabel.setPreferredSize(new Dimension(10, 10));
-		iconLabel.setIcon(imageIcon);
-		imageIcon.setImageObserver(iconLabel);
-		contentPane.add(iconLabel, "cell 1 1");
-		iconLabel.setVisible(false);
-		contentPane.add(button, "flowx,cell 0 2,grow");
-
-		btnNewButton = new JButton("Done");
-		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				iconLabel.setVisible(true);
 				videoID = "";
@@ -130,7 +116,20 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 				rpdu.run();
 				executor = Executors.newScheduledThreadPool(1);
 				executor.scheduleAtFixedRate(rpdu, 0, 250, TimeUnit.MILLISECONDS);
+			}
+		});
+		iconLabel = new JLabel();
+		iconLabel.setPreferredSize(new Dimension(10, 10));
+		iconLabel.setIcon(imageIcon);
+		imageIcon.setImageObserver(iconLabel);
+		contentPane.add(iconLabel, "cell 1 1");
+		iconLabel.setVisible(false);
+		contentPane.add(button, "flowx,cell 0 2,grow");
 
+		btnNewButton = new JButton("Done");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				killProcess(true);
 			}
 		});
 		contentPane.add(btnNewButton, "cell 0 2,grow");
@@ -138,14 +137,22 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	}
 
 	// kill the runnable and the youtube-dl process
-	public static void killProcess() {
+	public static void killProcess(Boolean closeWindow) {
 		try {
 			Runtime.getRuntime().exec("taskkill /F /IM youtube-dl.exe");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		executor.shutdown();
+		try {
+			executor.shutdown();
+		} catch (NullPointerException e) {
+			System.out.println("[INFO] Unsuccessfully tried to close a RunnableYouTubeLinkDialogUpdater scheduler.");
+		}
+		
+		if (closeWindow) {
+			DTunesWindow.disposeYouTubeLinkDialog();
+		}
 	}
 
 	// gives the video ID to the runnable so it can trim the string there

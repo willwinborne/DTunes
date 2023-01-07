@@ -45,6 +45,11 @@ public class DTunesWindow extends JFrame {
 	private static JTable table;
 	private static DefaultTableModel model;
 
+	
+	public static void disposeYouTubeLinkDialog() {
+		frame2.dispose();
+	}
+	
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
 	 * directory.
