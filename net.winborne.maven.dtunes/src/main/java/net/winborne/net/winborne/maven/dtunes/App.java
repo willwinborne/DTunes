@@ -13,7 +13,6 @@ public class App {
 	public static void main(String[] args) {
 		
 		// plant a copy of youtube-dl
-		// test
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		InputStream is = classloader.getResourceAsStream("youtube-dl.exe");
 		File targetFile = new File("youtube-dl.exe");
