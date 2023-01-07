@@ -16,7 +16,6 @@ public class RunnableProgressDialogUpdater implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Runnable fired");
 		File file = new File("youtube-dl-log.txt");
 
 		try {
@@ -30,7 +29,6 @@ public class RunnableProgressDialogUpdater implements Runnable {
 		try {
 			while ((line = br.readLine()) != null) {
 				last = line;
-				System.out.println(last);
 				char[] lastArray = last.toCharArray();
 				String progress = "";
 				if (last.length()>0) {
@@ -38,14 +36,16 @@ public class RunnableProgressDialogUpdater implements Runnable {
 						progress += lastArray[i];
 					}
 				}
-				
-				System.out.println("Extracted progress: " + progress);
 				DTunesProgressDialog.setProgress(progress);
+				
+				if (progress == "100") {
+					
+				}
+				
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//System.out.println(last);
-		
 	}
 }
