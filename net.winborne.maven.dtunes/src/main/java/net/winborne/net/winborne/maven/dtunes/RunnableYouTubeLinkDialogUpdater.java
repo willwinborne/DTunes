@@ -41,8 +41,9 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 					for (int i = ytdlTagIndex + 13; i < videoIDIndex - 1; i++) {
 						title += lastArray[i];
 					}
-					DTunesYouTubeLinkDialog.setVideoTitle(title);
 					DTunesYouTubeLinkDialog.killProcess();
+					DTunesYouTubeLinkDialog.setVideoTitle(title);
+					
 				}
 			}
 		} catch (IOException e) {
