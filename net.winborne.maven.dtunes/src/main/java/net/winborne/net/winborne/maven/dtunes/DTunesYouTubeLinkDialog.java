@@ -69,7 +69,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	public DTunesYouTubeLinkDialog() {
 		setTitle("Add YouTube link to queue");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 390, 160);
+		setBounds(100, 100, 375, 160);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
