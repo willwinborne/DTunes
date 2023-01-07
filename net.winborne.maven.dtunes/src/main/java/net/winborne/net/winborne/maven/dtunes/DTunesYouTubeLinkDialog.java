@@ -45,7 +45,8 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	private static String videoID = "";
 	private static String videoTitle = "";
 	private JLabel lblNewLabel_1;
-
+	private static JLabel iconLabel;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -80,7 +81,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		contentPane.add(lblNewLabel, "flowx,cell 0 0,grow");
 
 		ClassLoader cldr = this.getClass().getClassLoader();
-	    URL imageURL   = cldr.getResource("spinner.gif");
+	    URL imageURL = cldr.getResource("spinner.gif");
 	    ImageIcon imageIcon = new ImageIcon(imageURL);
 		
 		
@@ -95,16 +96,18 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		JLabel iconLabel = new JLabel();
+		iconLabel = new JLabel();
 		iconLabel.setPreferredSize(new Dimension(10, 10));
 		iconLabel.setIcon(imageIcon);
 		imageIcon.setImageObserver(iconLabel);
 		contentPane.add(iconLabel, "cell 1 1");
+		iconLabel.setVisible(false);
 		contentPane.add(button, "flowx,cell 0 2,grow");
 
 		btnNewButton = new JButton("Done");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				iconLabel.setVisible(true);
 				videoID = "";
 				int indexOfVideoID = textField.getText().indexOf("?v=");
 				char[] linkArray = textField.getText().toCharArray();
@@ -154,6 +157,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	public static void setVideoTitle(String videoTitleIn) {
 		System.out.println("Current video title: " + videoTitleIn);
 		videoTitle = videoTitleIn;
+		iconLabel.setVisible(false);
 		int choice = JOptionPane.showConfirmDialog(null, "Is the video title\n" + videoTitleIn + "\ncorrect?",
 				"Verify video title", JOptionPane.YES_NO_OPTION);
 		if (choice == 1) {
