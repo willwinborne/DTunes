@@ -64,6 +64,7 @@ public class DTunesWindow extends JFrame {
 	private static final int FIXED_WIDTH = 650;
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
+	private static DTunesYouTubeLinkDialog frame2;
 	private static Process process;
 
 	/**
@@ -204,32 +205,45 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							frame = new DTunesProgressDialog();
-							frame.setVisible(true);
+							frame2 = new DTunesYouTubeLinkDialog();
+							frame2.setVisible(true);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 					}
 				});
-
-				try {
-					downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 			}
 		});
 
 		JLabel lblNewLabel_2 = new JLabel("Step 2: Download from YouTube");
+
 		panel.add(lblNewLabel_2, "cell 0 7");
 
 		JButton btnNewButton_3 = new JButton("Download YouTube songs");
-
 		panel.add(btnNewButton_3, "cell 0 8");
+		btnNewButton_3.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				EventQueue.invokeLater(new Runnable() {
+					public void run() {
+						try {
+							frame = new DTunesProgressDialog();
+							frame.setVisible(true);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						try {
+							downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
+						} catch (FileNotFoundException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						} catch (UnsupportedEncodingException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+				});
+			}
+		});
 
 		JButton btnNewButton_5 = new JButton("Convert and apply playlist to DPLAYER");
 		panel.add(btnNewButton_5, "cell 0 9");
