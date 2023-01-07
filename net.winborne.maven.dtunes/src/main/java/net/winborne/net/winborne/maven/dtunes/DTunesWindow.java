@@ -4,64 +4,36 @@ import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.FlowLayout;
-import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFileChooser;
-import javax.swing.SwingConstants;
 import javax.swing.JLabel;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.ProcessBuilder.Redirect;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executors;
-import java.util.concurrent.FutureTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
 import net.miginfocom.swing.MigLayout;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.ListModel;
-import javax.swing.border.SoftBevelBorder;
-
-import org.apache.logging.log4j.core.util.IOUtils;
-
-import javax.swing.border.BevelBorder;
-import javax.swing.border.EtchedBorder;
-
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
 import ws.schild.jave.Encoder;
 import ws.schild.jave.MultimediaObject;
 import ws.schild.jave.encode.AudioAttributes;
 import ws.schild.jave.encode.EncodingAttributes;
-
-import java.util.Timer;
-import java.util.TimerTask;
-import javax.swing.JSeparator;
-import java.awt.Color;
-import javax.swing.JTabbedPane;
-import javax.swing.border.MatteBorder;
 import java.awt.GridLayout;
-import javax.swing.UIManager;
-import javax.swing.border.LineBorder;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.AbstractListModel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
+@SuppressWarnings("serial")
 public class DTunesWindow extends JFrame {
 
 	private static final int FIXED_WIDTH = 650;
@@ -136,8 +108,8 @@ public class DTunesWindow extends JFrame {
 	/**
 	 * Main DTunes Window Definition
 	 */
+	@SuppressWarnings("serial")
 	public DTunesWindow() {
-		setResizable(false);
 
 		setTitle("DTunes");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -175,13 +147,12 @@ public class DTunesWindow extends JFrame {
 		listModel.addElement("USB");
 		listModel.addElement("USC");
 		System.out.println("Working Directory = " + System.getProperty("user.dir"));
-		contentPane.setLayout(new MigLayout("", "[46px,grow][184px][300px][67px]", "[]"));
+		contentPane.setLayout(new MigLayout("", "[60][2000]", "[]"));
 		Dimension d = new Dimension(300, 470);
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, "cell 0 0,grow");
-		panel.setLayout(new MigLayout("", "[155px][32px][117px][165px][99px][217px]",
-				"[][10][][][][][25][][][][25][][][][][][][][][][][]"));
+		panel.setLayout(new MigLayout("", "[120px][32px][117px][165px]", "[][10][][][][][25][][][][25][][][][][][][][][][][]"));
 
 		JLabel lblNewLabel_5 = new JLabel("DPLAYER Companion");
 		panel.add(lblNewLabel_5, "cell 0 0");
@@ -265,51 +236,46 @@ public class DTunesWindow extends JFrame {
 		panel.add(lblNewLabel_4, "cell 0 16");
 		
 				JPanel panel_1 = new JPanel();
-				contentPane.add(panel_1, "cell 1 0 2 1");
-				panel_1.setLayout(new MigLayout("", "[grow][1px]", "[][grow][1px]"));
-				Object[][] data = {
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
-						{"0", "b", ".com", "0"},
+				contentPane.add(panel_1, "cell 1 0");
+ 
+				Object[][] data = {{"N/A", "No songs added!", "N/A", "N/A"},};
 				
-				};
 				String[] columnNames = {"#", "Title", "URL", "Length"};
 				
+				table = new JTable(data, columnNames) {
+			    public boolean editCellAt(int row, int column, java.util.EventObject e) {
+			        return false;
+			     }
+				};
 				
-				table = new JTable(data, columnNames);
 				table.setFillsViewportHeight(true);
 				JScrollPane scrollPane = new JScrollPane(table);
 				table.setFillsViewportHeight(true);
+				DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+				centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+				table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+				table.setPreferredScrollableViewportSize( new Dimension(2000,2000) );
+				TableColumn column = null;
+				for (int i = 0; i < 3; i++) {
+				    column = table.getColumnModel().getColumn(i);
+				    if (i == 2) {
+				        column.setPreferredWidth(200);
+				    }
+				    if (i == 1) {
+				        column.setPreferredWidth(500);
+				    }
+				    
+				    if (i == 0) {
+				    	column.setPreferredWidth(50);
+				    }
+				}
+				panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 				
-				panel_1.add(scrollPane, "cell 0 1 2 1,grow");
+				
+				panel_1.add(scrollPane);
 
 	}
+	
+
 
 }
