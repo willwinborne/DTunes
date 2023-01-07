@@ -83,7 +83,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		btnNewButton = new JButton("Done");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-
+				videoID = "";
 				int indexOfVideoID = textField.getText().indexOf("?v=");
 				char[] linkArray = textField.getText().toCharArray();
 				for (int i = indexOfVideoID + 3; i < textField.getText().length(); i++) {
