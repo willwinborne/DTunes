@@ -45,11 +45,26 @@ public class DTunesWindow extends JFrame {
 	private static JTable table;
 	private static DefaultTableModel model;
 
-	
+	/**
+	 * Dispose of the YouTubeLinkDialog. Use carefully, no error checking.
+	 */
 	public static void disposeYouTubeLinkDialog() {
 		frame2.dispose();
 	}
-	
+
+	/**
+	 * Save a song that has been added to the queue to the JList.
+	 */
+	public static void saveSong(String songTitle, String songURL) {
+
+		if (table.getValueAt(0, 1) == "No songs added!") {
+			model.removeRow(0);
+			model.insertRow(0, new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
+			return;
+		}
+		model.addRow(new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
+	}
+
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
 	 * directory.
@@ -74,21 +89,6 @@ public class DTunesWindow extends JFrame {
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 		return true;
-	}
-	
-	/**
-	 * Save a song that has been downloaded to the JList.
-	 */
-	public static void saveSong(String songTitle, String songURL) {
-		
-		if (table.getValueAt(0,1) == "No songs added!") {
-			model.removeRow(0);
-			model.insertRow(0, new Object[]{table.getRowCount() + 1, songTitle, songURL, ".m4a"});
-			return;
-		}
-		
-		
-		model.addRow(new Object[]{table.getRowCount() + 1, songTitle, songURL, ".m4a"});
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class DTunesWindow extends JFrame {
 			// Encode
 			Encoder encoder = new Encoder();
 			encoder.encode(new MultimediaObject(source), target, attrs, listener);
- 
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			succeeded = false;
@@ -130,7 +130,6 @@ public class DTunesWindow extends JFrame {
 	/**
 	 * Main DTunes Window Definition
 	 */
-	@SuppressWarnings("serial")
 	public DTunesWindow() {
 
 		setTitle("DTunes");
@@ -248,7 +247,7 @@ public class DTunesWindow extends JFrame {
 		Object[][] data = { { "N/A", "No songs added!", "N/A", "N/A" }, };
 
 		String[] columnNames = { "#", "Title", "URL / Video ID", "Filetype" };
-		model = new DefaultTableModel(data, columnNames); 
+		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model) {
 			public boolean editCellAt(int row, int column, java.util.EventObject e) {
 				return false;

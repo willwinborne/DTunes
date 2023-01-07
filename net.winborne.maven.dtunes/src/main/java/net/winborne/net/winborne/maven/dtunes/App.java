@@ -11,19 +11,19 @@ import java.nio.file.StandardCopyOption;
  */
 public class App {
 	public static void main(String[] args) {
-		
+
 		// plant a copy of youtube-dl
 		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
 		InputStream is = classloader.getResourceAsStream("youtube-dl.exe");
 		File targetFile = new File("youtube-dl.exe");
-		
+
 		try {
 			java.nio.file.Files.copy(is, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
+
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -36,4 +36,3 @@ public class App {
 		});
 	}
 }
- 
