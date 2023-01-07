@@ -3,8 +3,7 @@ package net.winborne.net.winborne.maven.dtunes;
 import java.awt.EventQueue;
 
 /**
- * Entry point of DTunes. Created by William Winborne 12/4/2022. This
- * application is free and open source, never should you pay for this.
+ * Entry point of DTunes. Created by William Winborne 12/4/2022.
  */
 public class App {
 	public static void main(String[] args) {

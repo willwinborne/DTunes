@@ -9,6 +9,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridLayout;
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -26,7 +28,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	private JPanel contentPane;
 	private static Process process;
 	private static DTunesYouTubeLinkDialog frame;
-	private JTextField textField;
+	private static JTextField textField;
 	private JButton button;
 	private JButton btnNewButton;
 	private static ScheduledExecutorService executor;
@@ -50,7 +52,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	}
 
 	/**
-	 * Create the frame.
+	 * This wizard allows the user to add as many YouTube links to their playlist as they like. Links are checked at this stage but not downloaded yet.
 	 */
 	public DTunesYouTubeLinkDialog() {
 		setTitle("Add YouTube link to queue");
@@ -112,18 +114,31 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		
 	}
 	
+	// kill the runnable and the youtube-dl process
 	public static void killProcess() {
 		System.out.println("Title retrieved, killing process...");
 		process.destroy();
 		executor.shutdown();
 	}
 
+	// gives the video ID to the runnable so it can trim the string there
 	public static String returnLink() {
 		return videoID;
 	}
 	
+	
+	// called by the runnable when it finds the video title
 	public static void setVideoTitle(String videoTitleIn) {
 		System.out.println("Current video title: " + videoTitleIn);
 		videoTitle = videoTitleIn;
+		int choice = JOptionPane.showConfirmDialog(null, "Is the video title\n" + videoTitleIn + "\ncorrect?", "Verify video title", JOptionPane.YES_NO_OPTION);
+		if (choice == 1) {
+			System.out.println("user chose no");
+			// do nothing
+		} else {
+			System.out.println("user chose yes");
+			// TODO: save the song to the JList
+			textField.setText("");
+		}
 	}
 }
