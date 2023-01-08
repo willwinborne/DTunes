@@ -18,6 +18,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.ProcessBuilder.Redirect;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -51,6 +52,7 @@ public class DTunesWindow extends JFrame {
 	private static ScheduledExecutorService pinnerExecutorForDownloader;
 	private static Boolean downloaderIsOpen = false;
 	private static Boolean linkDialogIsOpen = false;
+	private static ArrayList<Song> playlist;
 
 	/**
 	 * Dispose of the YouTubeLinkDialog. Also shuts down the pinner runnable.
@@ -64,15 +66,17 @@ public class DTunesWindow extends JFrame {
 
 	/**
 	 * Save a song that has been added to the queue to the JList.
+	 * Also create a Song object and save it to the playlist.
 	 */
 	public static void saveSong(String songTitle, String songURL) {
-
 		if (table.getValueAt(0, 1) == "No songs added!") {
 			model.removeRow(0);
 			model.insertRow(0, new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
 			return;
 		}
 		model.addRow(new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
+		Song s = new Song(table.getRowCount() + 1, songTitle, songURL, ".m4a");
+		playlist.add(s);
 	}
 
 	/**
@@ -221,6 +225,7 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
+							// open playlist wizard
 							if (!downloaderIsOpen) {
 								linkDialogIsOpen = true;
 								frame2 = new DTunesYouTubeLinkDialog();
@@ -252,6 +257,7 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
+							// open playlist downloader
 							if (!linkDialogIsOpen) {
 								downloaderIsOpen = true;
 								frame = new DTunesProgressDialog();
