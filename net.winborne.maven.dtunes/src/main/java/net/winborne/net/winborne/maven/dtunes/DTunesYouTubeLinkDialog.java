@@ -140,7 +140,10 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 
 	}
 
-	// kill the runnable and the youtube-dl process
+	/**
+	 * kill the runnable and the youtube-dl process
+	 * if you would like to also close the dialog fully, pass true
+	 */
 	public static void killProcess(Boolean closeWindow) {
 		try {
 			Runtime.getRuntime().exec("taskkill /F /IM youtube-dl.exe");
@@ -159,12 +162,18 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		}
 	}
 
-	// gives the video ID to the runnable so it can trim the string there
+	/**
+	 *  gives the video ID to the runnable so it can trim the string there
+	 */
 	public static String returnLink() {
 		return videoID;
 	}
 
-	// called by the runnable when it finds the video title
+	/**
+	 * called by the runnable when it finds the video title.
+	 * verifies the video title with the user, and saves the song if it's desired.
+	 * otherwise, do nothing.
+	 */
 	public static void setVideoTitle(String videoTitleIn) {
 		System.out.println("Current video title: " + videoTitleIn);
 		videoTitle = videoTitleIn;

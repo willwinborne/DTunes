@@ -14,10 +14,11 @@ public class RunnableYouTubeLinkDialogUpdater implements Runnable {
 
 	private BufferedReader br;
 
-	// Determines when the title of the YouTube video has been retrieved
-	// once the title is retrieved, the process is killed, the schedule for this
-	// runnable is destroyed, then the trimmed title is passed back to the
-	// YouTubeLinkDialog.
+	/**
+	 * Determines when the title of the YouTube video has been retrieved. once the
+	 * title is retrieved, the process is killed, the schedule for this runnable is
+	 * destroyed, then the trimmed title is passed back to the YouTubeLinkDialog.
+	 */
 	@Override
 	public void run() {
 		File file = new File("youtube-dl-log.txt");
