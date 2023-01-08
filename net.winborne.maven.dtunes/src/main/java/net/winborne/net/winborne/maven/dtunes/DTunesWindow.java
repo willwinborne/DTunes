@@ -288,7 +288,7 @@ public class DTunesWindow extends JFrame {
 								
 								
 
-							}
+						
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
