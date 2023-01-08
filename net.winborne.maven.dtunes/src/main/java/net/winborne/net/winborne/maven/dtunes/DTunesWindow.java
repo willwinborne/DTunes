@@ -44,12 +44,16 @@ public class DTunesWindow extends JFrame {
 	private static Process process;
 	private static JTable table;
 	private static DefaultTableModel model;
-
+	private static ScheduledExecutorService pinnerExecutor;
+	
 	/**
-	 * Dispose of the YouTubeLinkDialog. Use carefully, no error checking.
+	 * Dispose of the YouTubeLinkDialog.
+	 * Also shuts down the pinner runnable.
 	 */
 	public static void disposeYouTubeLinkDialog() {
+		pinnerExecutor.shutdown();
 		frame2.dispose();
+		System.out.println("YouTube link dialog and pinner disposed.");
 	}
 
 	/**
@@ -89,6 +93,10 @@ public class DTunesWindow extends JFrame {
 		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 		return true;
+	}
+	
+	public static void pinYouTubeLinkDialog() {
+		frame2.setLocation(DTunesWindow.getFrames()[0].getX() + (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)), DTunesWindow.getFrames()[0].getY() + (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame2.getHeight() / 2)));
 	}
 
 	/**
@@ -191,8 +199,12 @@ public class DTunesWindow extends JFrame {
 					public void run() {
 						try {
 							frame2 = new DTunesYouTubeLinkDialog();
+							frame2.setUndecorated(true);
 							frame2.setVisible(true);
-							frame2.setLocation(DTunesWindow.getFrames()[0].getX() + (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)), DTunesWindow.getFrames()[0].getY() + (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame2.getHeight() / 2)));
+							RunnableYouTubeLinkDialogPinner runnablePinner = new RunnableYouTubeLinkDialogPinner();
+							runnablePinner.run();
+							pinnerExecutor = Executors.newScheduledThreadPool(1);
+							pinnerExecutor.scheduleAtFixedRate(runnablePinner, 0, 50, TimeUnit.MILLISECONDS);
 						} catch (Exception e) {
 							e.printStackTrace();
 						}

@@ -69,6 +69,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	 * they like. Links are checked at this stage but not downloaded yet.
 	 */
 	public DTunesYouTubeLinkDialog() {
+		setAlwaysOnTop(true);
 		setTitle("Add YouTube link to queue");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 375, 160);
