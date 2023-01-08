@@ -35,6 +35,7 @@ import ws.schild.jave.encode.EncodingAttributes;
 import java.awt.GridLayout;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
@@ -52,6 +53,7 @@ public class DTunesWindow extends JFrame {
 	private static ScheduledExecutorService pinnerExecutorForDownloader;
 	private static Boolean downloaderIsOpen = false;
 	private static Boolean linkDialogIsOpen = false;
+	private static Boolean songIsDownloading = false;
 	private static ArrayList<Song> playlist;
 
 	/**
@@ -72,24 +74,27 @@ public class DTunesWindow extends JFrame {
 		if (table.getValueAt(0, 1) == "No songs added!") {
 			model.removeRow(0);
 			model.insertRow(0, new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
-			return;
+		} else {
+			model.addRow(new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
 		}
-		model.addRow(new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
+		
 		Song s = new Song(table.getRowCount() + 1, songTitle, songURL, ".m4a");
 		playlist.add(s);
+		System.out.println(s.toString());
 	}
 
 	/**
 	 * Download a song from YouTube given a URL. File goes into the working
 	 * directory.
 	 */
-	private Boolean downloadSongFromYouTube(String url) throws FileNotFoundException, UnsupportedEncodingException {
-		System.out.println("[INFO] Downloading from YouTube with URL: " + url);
-
+	private Boolean downloadSongFromYouTube(Song s) throws FileNotFoundException, UnsupportedEncodingException {
+		
+		songIsDownloading = true;
+		
 		File file = new File("youtube-dl-log.txt");
 
 		ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c",
-				"youtube-dl.exe " + "https://www.youtube.com/watch?v=XOzs1FehYOA" + " -x")
+				"youtube-dl.exe " + "https://www.youtube.com/watch?v="+ s.getSongURL() + " -x")
 				.redirectOutput(Redirect.to(file));
 		try {
 			process = processBuilder.start();
@@ -123,7 +128,10 @@ public class DTunesWindow extends JFrame {
 					DTunesWindow.getFrames()[0].getY()
 							+ (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame.getHeight() / 2)));
 		}
-
+	}
+	
+	public static void signalSongDoneDownloading() {
+		songIsDownloading = false;
 	}
 
 	/**
@@ -166,7 +174,7 @@ public class DTunesWindow extends JFrame {
 	 * Main DTunes Window Definition
 	 */
 	public DTunesWindow() {
-
+		playlist = new ArrayList<Song>();
 		setTitle("DTunes");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 927, 547);
@@ -257,6 +265,12 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
+							
+							if (table.getValueAt(0, 1) == "No songs added!") {
+								JOptionPane.showMessageDialog(null, "Add a song from YouTube first.", "No songs added",  JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							
 							// open playlist downloader
 							if (!linkDialogIsOpen) {
 								downloaderIsOpen = true;
@@ -269,6 +283,17 @@ public class DTunesWindow extends JFrame {
 								pinnerExecutorForDownloader = Executors.newScheduledThreadPool(1);
 								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
 										TimeUnit.MILLISECONDS);
+								
+								
+								
+								for (Song s : playlist) {
+									System.out.println("Trying to download song: " + s.getSongTitle());
+									downloadSongFromYouTube(s);
+									// blocking call. does it even work?
+									pinnerExecutorForDownloader.awaitTermination(600, TimeUnit.SECONDS);
+								}
+								
+								
 							}
 						} catch (Exception e) {
 							e.printStackTrace();

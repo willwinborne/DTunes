@@ -70,6 +70,9 @@ public class DTunesProgressDialog extends JFrame {
 	 * @param progressIn
 	 */
 	public static void setProgress(String progressIn) {
+		if (Double.parseDouble(progressIn) >= 100) {
+			DTunesWindow.signalSongDoneDownloading();
+		}
 		try {
 			progress = Double.parseDouble(progressIn);
 			progressBar.setValue((int) Math.round(Double.parseDouble(progressIn)));

@@ -30,4 +30,11 @@ public class Song {
 	public String getSongURL() {
 		return songURL;
 	}
+	
+	public String toString() {
+		return "SONG #" + songNumber + "\n" +
+			   "TITLE: " + songTitle + "\n" +
+			   "URL: " + songURL + "\n" +
+			   "EXTENSION: " + songExtension + "\n";
+	}
 }
