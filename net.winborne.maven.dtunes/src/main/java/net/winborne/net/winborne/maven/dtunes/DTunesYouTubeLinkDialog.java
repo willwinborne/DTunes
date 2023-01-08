@@ -56,6 +56,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 				try {
 					frame = new DTunesYouTubeLinkDialog();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,7 +74,6 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		setBounds(100, 100, 375, 160);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[424px]", "[25][25][25]"));
 

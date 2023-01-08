@@ -192,6 +192,7 @@ public class DTunesWindow extends JFrame {
 						try {
 							frame2 = new DTunesYouTubeLinkDialog();
 							frame2.setVisible(true);
+							frame2.setLocation(DTunesWindow.getFrames()[0].getX() + (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)), DTunesWindow.getFrames()[0].getY() + (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame2.getHeight() / 2)));
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
