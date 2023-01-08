@@ -15,10 +15,19 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.lang.ProcessBuilder.Redirect;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +47,8 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
+
+import java.io.ByteArrayInputStream;
 
 @SuppressWarnings("serial")
 public class DTunesWindow extends JFrame {
@@ -108,6 +119,7 @@ public class DTunesWindow extends JFrame {
 	public static void signalSongDoneDownloading() {
 		songIsDownloading = false;
 		executor.shutdown();
+		playlist.remove(song);
 	}
 
 	public static void signalSongIsDownloading() {
@@ -176,10 +188,32 @@ public class DTunesWindow extends JFrame {
 
 		JMenu x = new JMenu("Export and import");
 
-		JMenuItem m1 = new JMenuItem("Export current playlist to zip file...");
+		final JMenuItem m1 = new JMenuItem("Export current playlist to zip file...");
 		m1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("JMenuBar interacted - export playlist...");
+
+				String exportString = "";
+				for (Song s : playlist) {
+					exportString += s.toString();
+				}
+
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showSaveDialog(m1) == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					FileWriter myWriter;
+					try {
+						myWriter = new FileWriter(file);
+						myWriter.write(exportString);
+						myWriter.close();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+
+				}
+
 			}
 		});
 		JMenuItem m2 = new JMenuItem("Import playlist from zip file...");
@@ -277,18 +311,15 @@ public class DTunesWindow extends JFrame {
 								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
 										TimeUnit.MILLISECONDS);
 
-									// dlman needs to check into this class to see which song it needs to download
-									// runnables that it needs to call can be managed from here
-									RunnableYouTubeDownloadManager dlman = new RunnableYouTubeDownloadManager();
-									dlmanExecutor = Executors.newScheduledThreadPool(1);
-									dlmanExecutor.scheduleAtFixedRate(dlman, 0, 250, TimeUnit.MILLISECONDS);
-									System.out.println("Instantiated dlman.");
+								// dlman needs to check into this class to see which song it needs to download
+								// runnables that it needs to call can be managed from here
+								RunnableYouTubeDownloadManager dlman = new RunnableYouTubeDownloadManager();
+								dlmanExecutor = Executors.newScheduledThreadPool(1);
+								dlmanExecutor.scheduleAtFixedRate(dlman, 0, 250, TimeUnit.MILLISECONDS);
+								System.out.println("Instantiated dlman.");
 
-								}
-								
-								
+							}
 
-						
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -317,32 +348,37 @@ public class DTunesWindow extends JFrame {
 		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model) {
 
-	public boolean editCellAt(int row, int column, java.util.EventObject e) {
-		return false;
-	}};
+			public boolean editCellAt(int row, int column, java.util.EventObject e) {
+				return false;
+			}
+		};
 
-	table.setFillsViewportHeight(true);
+		table.setFillsViewportHeight(true);
 
-	JScrollPane scrollPane = new JScrollPane(table);table.setFillsViewportHeight(true);
-	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();centerRenderer.setHorizontalAlignment(JLabel.CENTER);table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);table.setPreferredScrollableViewportSize(new Dimension(2000,2000));
-	TableColumn column = null;for(
-	int i = 0;i<3;i++)
-	{
-		column = table.getColumnModel().getColumn(i);
-		if (i == 2 || i == 3) {
-			column.setPreferredWidth(100);
+		JScrollPane scrollPane = new JScrollPane(table);
+		table.setFillsViewportHeight(true);
+		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+		table.setPreferredScrollableViewportSize(new Dimension(2000, 2000));
+		TableColumn column = null;
+		for (int i = 0; i < 3; i++) {
+			column = table.getColumnModel().getColumn(i);
+			if (i == 2 || i == 3) {
+				column.setPreferredWidth(100);
+			}
+			if (i == 1) {
+				column.setPreferredWidth(500);
+			}
+
+			if (i == 0) {
+				column.setPreferredWidth(50);
+			}
 		}
-		if (i == 1) {
-			column.setPreferredWidth(500);
-		}
+		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
 
-		if (i == 0) {
-			column.setPreferredWidth(50);
-		}
-	}panel_1.setLayout(new GridLayout(1,0,0,0));
+		panel_1.add(scrollPane);
 
-	panel_1.add(scrollPane);
-
-}
+	}
 
 }
