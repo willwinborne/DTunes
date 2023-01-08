@@ -46,15 +46,16 @@ public class DTunesWindow extends JFrame {
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
 	private static DTunesYouTubeLinkDialog frame2;
-	private static Process process;
 	private static JTable table;
 	private static DefaultTableModel model;
 	private static ScheduledExecutorService pinnerExecutor;
+	private static ScheduledExecutorService dlmanExecutor;
 	private static ScheduledExecutorService pinnerExecutorForDownloader;
 	private static Boolean downloaderIsOpen = false;
 	private static Boolean linkDialogIsOpen = false;
 	private static Boolean songIsDownloading = false;
 	private static ArrayList<Song> playlist;
+	private static Song song;
 
 	/**
 	 * Dispose of the YouTubeLinkDialog. Also shuts down the pinner runnable.
@@ -67,8 +68,8 @@ public class DTunesWindow extends JFrame {
 	}
 
 	/**
-	 * Save a song that has been added to the queue to the JList.
-	 * Also create a Song object and save it to the playlist.
+	 * Save a song that has been added to the queue to the JList. Also create a Song
+	 * object and save it to the playlist.
 	 */
 	public static void saveSong(String songTitle, String songURL) {
 		if (table.getValueAt(0, 1) == "No songs added!") {
@@ -77,37 +78,10 @@ public class DTunesWindow extends JFrame {
 		} else {
 			model.addRow(new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
 		}
-		
+
 		Song s = new Song(table.getRowCount() + 1, songTitle, songURL, ".m4a");
 		playlist.add(s);
 		System.out.println(s.toString());
-	}
-
-	/**
-	 * Download a song from YouTube given a URL. File goes into the working
-	 * directory.
-	 */
-	private Boolean downloadSongFromYouTube(Song s) throws FileNotFoundException, UnsupportedEncodingException {
-		
-		songIsDownloading = true;
-		
-		File file = new File("youtube-dl-log.txt");
-
-		ProcessBuilder processBuilder = new ProcessBuilder("cmd", "/c",
-				"youtube-dl.exe " + "https://www.youtube.com/watch?v="+ s.getSongURL() + " -x")
-				.redirectOutput(Redirect.to(file));
-		try {
-			process = processBuilder.start();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
-		rpdu.run();
-		ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
-		return true;
 	}
 
 	/**
@@ -129,9 +103,17 @@ public class DTunesWindow extends JFrame {
 							+ (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame.getHeight() / 2)));
 		}
 	}
-	
+
 	public static void signalSongDoneDownloading() {
 		songIsDownloading = false;
+	}
+	
+	public static Song getSong() {
+		return song;
+	}
+	
+	public static Boolean getSongIsDownloading() {
+		return songIsDownloading;
 	}
 
 	/**
@@ -265,12 +247,13 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							
+
 							if (table.getValueAt(0, 1) == "No songs added!") {
-								JOptionPane.showMessageDialog(null, "Add a song from YouTube first.", "No songs added",  JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "Add a song from YouTube first.", "No songs added",
+										JOptionPane.ERROR_MESSAGE);
 								return;
 							}
-							
+
 							// open playlist downloader
 							if (!linkDialogIsOpen) {
 								downloaderIsOpen = true;
@@ -283,17 +266,22 @@ public class DTunesWindow extends JFrame {
 								pinnerExecutorForDownloader = Executors.newScheduledThreadPool(1);
 								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
 										TimeUnit.MILLISECONDS);
+
+
 								
+								System.out.println("Trying to download song: " + s.getSongTitle());
 								
 								
 								for (Song s : playlist) {
-									System.out.println("Trying to download song: " + s.getSongTitle());
-									downloadSongFromYouTube(s);
-									// blocking call. does it even work?
-									pinnerExecutorForDownloader.awaitTermination(600, TimeUnit.SECONDS);
+									song = s;
+									RunnableYouTubeDownloadManager dlman = new RunnableYouTubeDownloadManager();
+									dlmanExecutor = Executors.newScheduledThreadPool(1);
+									dlmanExecutor.scheduleAtFixedRate(dlman, 0, 250, TimeUnit.MILLISECONDS);
+
 								}
 								
 								
+
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
