@@ -1,5 +1,6 @@
 package net.winborne.net.winborne.maven.dtunes;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
@@ -17,6 +18,7 @@ import javax.swing.JOptionPane;
 import java.awt.GridLayout;
 import java.awt.Image;
 
+import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -54,6 +56,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					
 					frame = new DTunesYouTubeLinkDialog();
 					frame.setVisible(true);
 					
@@ -72,7 +75,7 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 		setAlwaysOnTop(true);
 		setTitle("Add YouTube link to queue");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 375, 160);
+		setBounds(100, 100, 351, 141);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);

@@ -1,9 +1,12 @@
 package net.winborne.net.winborne.maven.dtunes;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import javax.swing.JMenu;
@@ -53,7 +56,7 @@ public class DTunesWindow extends JFrame {
 	public static void disposeYouTubeLinkDialog() {
 		pinnerExecutor.shutdown();
 		frame2.dispose();
-		System.out.println("YouTube link dialog and pinner disposed.");
+		System.out.println("[INFO] YouTube link dialog and pinner disposed.");
 	}
 
 	/**
@@ -74,7 +77,7 @@ public class DTunesWindow extends JFrame {
 	 * directory.
 	 */
 	private Boolean downloadSongFromYouTube(String url) throws FileNotFoundException, UnsupportedEncodingException {
-		System.out.println("Downloading from YouTube with URL: " + url);
+		System.out.println("[INFO] Downloading from YouTube with URL: " + url);
 
 		File file = new File("youtube-dl-log.txt");
 
@@ -201,6 +204,7 @@ public class DTunesWindow extends JFrame {
 							frame2 = new DTunesYouTubeLinkDialog();
 							frame2.setUndecorated(true);
 							frame2.setVisible(true);
+							frame2.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
 							RunnableYouTubeLinkDialogPinner runnablePinner = new RunnableYouTubeLinkDialogPinner();
 							runnablePinner.run();
 							pinnerExecutor = Executors.newScheduledThreadPool(1);

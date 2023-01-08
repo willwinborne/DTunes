@@ -10,7 +10,6 @@ public class RunnableYouTubeLinkDialogPinner implements Runnable {
 
 	@Override
 	public void run() {
-		System.out.println("Pinning...");
 		DTunesWindow.pinYouTubeLinkDialog();
 	}
 }
