@@ -269,7 +269,7 @@ public class DTunesWindow extends JFrame {
 
 
 								
-								System.out.println("Trying to download song: " + s.getSongTitle());
+
 								
 								
 								for (Song s : playlist) {
@@ -277,6 +277,7 @@ public class DTunesWindow extends JFrame {
 									RunnableYouTubeDownloadManager dlman = new RunnableYouTubeDownloadManager();
 									dlmanExecutor = Executors.newScheduledThreadPool(1);
 									dlmanExecutor.scheduleAtFixedRate(dlman, 0, 250, TimeUnit.MILLISECONDS);
+									System.out.println("Instantiated dlman");
 
 								}
 								
