@@ -48,14 +48,17 @@ public class DTunesWindow extends JFrame {
 	private static JTable table;
 	private static DefaultTableModel model;
 	private static ScheduledExecutorService pinnerExecutor;
-	
+	private static ScheduledExecutorService pinnerExecutorForDownloader;
+	private static Boolean downloaderIsOpen = false;
+	private static Boolean linkDialogIsOpen = false;
+
 	/**
-	 * Dispose of the YouTubeLinkDialog.
-	 * Also shuts down the pinner runnable.
+	 * Dispose of the YouTubeLinkDialog. Also shuts down the pinner runnable.
 	 */
 	public static void disposeYouTubeLinkDialog() {
 		pinnerExecutor.shutdown();
 		frame2.dispose();
+		linkDialogIsOpen = false;
 		System.out.println("[INFO] YouTube link dialog and pinner disposed.");
 	}
 
@@ -97,12 +100,26 @@ public class DTunesWindow extends JFrame {
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 		return true;
 	}
-	
+
 	/**
-	 * Pins the YouTube link dialog to the main window. Meant to be called by a runnable with a scheduled executor service.
+	 * Pins the existing dialog to the main window. Meant to be called by a runnable
+	 * with a scheduled executor service.
 	 */
 	public static void pinYouTubeLinkDialog() {
-		frame2.setLocation(DTunesWindow.getFrames()[0].getX() + (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)), DTunesWindow.getFrames()[0].getY() + (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame2.getHeight() / 2)));
+		if (frame2 != null) {
+			frame2.setLocation(
+					DTunesWindow.getFrames()[0].getX()
+							+ (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)),
+					DTunesWindow.getFrames()[0].getY()
+							+ (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame2.getHeight() / 2)));
+		} else {
+			frame.setLocation(
+					DTunesWindow.getFrames()[0].getX()
+							+ (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame.getWidth() / 2)),
+					DTunesWindow.getFrames()[0].getY()
+							+ (DTunesWindow.getFrames()[0].getHeight() / 2 - (frame.getHeight() / 2)));
+		}
+
 	}
 
 	/**
@@ -204,14 +221,17 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							frame2 = new DTunesYouTubeLinkDialog();
-							frame2.setUndecorated(true);
-							frame2.setVisible(true);
-							frame2.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
-							RunnableYouTubeLinkDialogPinner runnablePinner = new RunnableYouTubeLinkDialogPinner();
-							runnablePinner.run();
-							pinnerExecutor = Executors.newScheduledThreadPool(1);
-							pinnerExecutor.scheduleAtFixedRate(runnablePinner, 0, 25, TimeUnit.MILLISECONDS);
+							if (!downloaderIsOpen) {
+								linkDialogIsOpen = true;
+								frame2 = new DTunesYouTubeLinkDialog();
+								frame2.setUndecorated(true);
+								frame2.setVisible(true);
+								frame2.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
+								RunnableYouTubeLinkDialogPinner runnablePinner = new RunnableYouTubeLinkDialogPinner();
+								runnablePinner.run();
+								pinnerExecutor = Executors.newScheduledThreadPool(1);
+								pinnerExecutor.scheduleAtFixedRate(runnablePinner, 0, 1, TimeUnit.MILLISECONDS);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -232,20 +252,22 @@ public class DTunesWindow extends JFrame {
 				EventQueue.invokeLater(new Runnable() {
 					public void run() {
 						try {
-							frame = new DTunesProgressDialog();
-							frame.setVisible(true);
+							if (!linkDialogIsOpen) {
+								downloaderIsOpen = true;
+								frame = new DTunesProgressDialog();
+								frame.setUndecorated(true);
+								frame.setVisible(true);
+								frame.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
+								RunnableYouTubeLinkDialogPinner runnablePinnerForDownloader = new RunnableYouTubeLinkDialogPinner();
+								runnablePinnerForDownloader.run();
+								pinnerExecutorForDownloader = Executors.newScheduledThreadPool(1);
+								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
+										TimeUnit.MILLISECONDS);
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
-						try {
-							downloadSongFromYouTube("https://www.youtube.com/watch?v=hOllF3TgAsM");
-						} catch (FileNotFoundException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						} catch (UnsupportedEncodingException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+
 					}
 				});
 			}
