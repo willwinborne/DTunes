@@ -106,7 +106,7 @@ public class DTunesWindow extends JFrame {
 	 * with a scheduled executor service.
 	 */
 	public static void pinYouTubeLinkDialog() {
-		if (frame2 != null) {
+		if (linkDialogIsOpen) {
 			frame2.setLocation(
 					DTunesWindow.getFrames()[0].getX()
 							+ (DTunesWindow.getFrames()[0].getWidth() / 2 - (frame2.getWidth() / 2)),
