@@ -32,8 +32,9 @@ public class RunnableProgressDialogUpdater implements Runnable {
 				}
 				DTunesProgressDialog.setProgress(progress);
 
-				if (progress == "100") {
-
+				if (progress.equals("00% ")) {
+					System.out.println("A video is done downloading");
+					DTunesWindow.signalSongDoneDownloading();
 				}
 			}
 		} catch (IOException e) {

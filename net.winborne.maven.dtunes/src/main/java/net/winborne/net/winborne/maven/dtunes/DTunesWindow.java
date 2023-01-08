@@ -48,6 +48,7 @@ public class DTunesWindow extends JFrame {
 	private static DTunesYouTubeLinkDialog frame2;
 	private static JTable table;
 	private static DefaultTableModel model;
+	private static ScheduledExecutorService executor;
 	private static ScheduledExecutorService pinnerExecutor;
 	private static ScheduledExecutorService dlmanExecutor;
 	private static ScheduledExecutorService pinnerExecutorForDownloader;
@@ -106,12 +107,21 @@ public class DTunesWindow extends JFrame {
 
 	public static void signalSongDoneDownloading() {
 		songIsDownloading = false;
+		executor.shutdown();
 	}
-	
+
+	public static void signalSongIsDownloading() {
+		songIsDownloading = true;
+		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
+		rpdu.run();
+		executor = Executors.newScheduledThreadPool(1);
+		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
+	}
+
 	public static Song getSong() {
 		return song;
 	}
-	
+
 	public static Boolean getSongIsDownloading() {
 		return songIsDownloading;
 	}
@@ -267,17 +277,12 @@ public class DTunesWindow extends JFrame {
 								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
 										TimeUnit.MILLISECONDS);
 
-
-								
-
-								
-								
-								for (Song s : playlist) {
-									song = s;
+									// dlman needs to check into this class to see which song it needs to download
+									// runnables that it needs to call can be managed from here
 									RunnableYouTubeDownloadManager dlman = new RunnableYouTubeDownloadManager();
 									dlmanExecutor = Executors.newScheduledThreadPool(1);
 									dlmanExecutor.scheduleAtFixedRate(dlman, 0, 250, TimeUnit.MILLISECONDS);
-									System.out.println("Instantiated dlman");
+									System.out.println("Instantiated dlman.");
 
 								}
 								
@@ -311,36 +316,33 @@ public class DTunesWindow extends JFrame {
 		String[] columnNames = { "#", "Title", "URL / Video ID", "Filetype" };
 		model = new DefaultTableModel(data, columnNames);
 		table = new JTable(model) {
-			public boolean editCellAt(int row, int column, java.util.EventObject e) {
-				return false;
-			}
-		};
 
-		table.setFillsViewportHeight(true);
-		JScrollPane scrollPane = new JScrollPane(table);
-		table.setFillsViewportHeight(true);
-		DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-		centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-		table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
-		table.setPreferredScrollableViewportSize(new Dimension(2000, 2000));
-		TableColumn column = null;
-		for (int i = 0; i < 3; i++) {
-			column = table.getColumnModel().getColumn(i);
-			if (i == 2 || i == 3) {
-				column.setPreferredWidth(100);
-			}
-			if (i == 1) {
-				column.setPreferredWidth(500);
-			}
+	public boolean editCellAt(int row, int column, java.util.EventObject e) {
+		return false;
+	}};
 
-			if (i == 0) {
-				column.setPreferredWidth(50);
-			}
+	table.setFillsViewportHeight(true);
+
+	JScrollPane scrollPane = new JScrollPane(table);table.setFillsViewportHeight(true);
+	DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();centerRenderer.setHorizontalAlignment(JLabel.CENTER);table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);table.setPreferredScrollableViewportSize(new Dimension(2000,2000));
+	TableColumn column = null;for(
+	int i = 0;i<3;i++)
+	{
+		column = table.getColumnModel().getColumn(i);
+		if (i == 2 || i == 3) {
+			column.setPreferredWidth(100);
 		}
-		panel_1.setLayout(new GridLayout(1, 0, 0, 0));
+		if (i == 1) {
+			column.setPreferredWidth(500);
+		}
 
-		panel_1.add(scrollPane);
+		if (i == 0) {
+			column.setPreferredWidth(50);
+		}
+	}panel_1.setLayout(new GridLayout(1,0,0,0));
 
-	}
+	panel_1.add(scrollPane);
+
+}
 
 }

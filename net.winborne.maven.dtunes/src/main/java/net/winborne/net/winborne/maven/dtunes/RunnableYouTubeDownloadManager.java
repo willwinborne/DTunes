@@ -18,6 +18,7 @@ public class RunnableYouTubeDownloadManager implements Runnable {
 	public void run() {
 		
 		if (!DTunesWindow.getSongIsDownloading()) {
+			DTunesWindow.signalSongIsDownloading();
 			Song song = DTunesWindow.getSong();
 			System.out.println("DTunes isn't currently downloading a song. I am going to try to download " + song.getSongTitle() + ".");
 
@@ -33,10 +34,7 @@ public class RunnableYouTubeDownloadManager implements Runnable {
 				e.printStackTrace();
 			}
 
-			RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
-			rpdu.run();
-			ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-			executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
+
 		}
 		
 		
