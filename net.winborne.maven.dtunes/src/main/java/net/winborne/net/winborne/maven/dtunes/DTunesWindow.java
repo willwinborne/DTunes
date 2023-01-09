@@ -28,6 +28,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -195,6 +196,11 @@ public class DTunesWindow extends JFrame {
 
 				String exportString = "";
 				for (Song s : playlist) {
+					// trim /n if it is the first song
+//					if (playlist.indexOf(s) == 0 || playlist.indexOf(s) == playlist.size() - 1) {
+//						exportString += s.toString().trim();
+//						return;
+//					}
 					exportString += s.toString();
 				}
 
@@ -216,10 +222,43 @@ public class DTunesWindow extends JFrame {
 
 			}
 		});
-		JMenuItem m2 = new JMenuItem("Import playlist from zip file...");
+		final JMenuItem m2 = new JMenuItem("Import playlist from zip file...");
 		m2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("JMenuBar interacted - import playlist...");
+				JFileChooser fileChooser = new JFileChooser();
+				if (fileChooser.showOpenDialog(m2) == JFileChooser.APPROVE_OPTION) {
+					File file = fileChooser.getSelectedFile();
+					Scanner sc;
+					ArrayList<String> contents = new ArrayList<String>();
+					try {
+						sc = new Scanner(file);
+						while (sc.hasNextLine()) {
+							contents.add(sc.nextLine());
+						}
+						sc.close();
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					for (String s : contents) {
+						System.out.println(s);
+					}
+					
+					for (int i = 0; i < contents.size(); i++) {
+						System.out.println("[INFO] IMPORT: i = " + i + "/n" + "[INFO] IMPORT: contents.size(): " + contents.size());
+						String[] songContents = contents.get(i).split(",");
+						Song s = new Song(Integer.parseInt(songContents[0]), songContents[1], songContents[2], songContents[3]);
+						saveSong(s.getSongTitle(), s.getSongURL());
+					}
+					
+					
+					
+				}
+
+						
+						
 			}
 		});
 		x.add(m1);

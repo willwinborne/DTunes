@@ -15,6 +15,11 @@ public class Song {
 		
 	}
 	
+	// overloaded constructor
+	public Song(String toStringIn) {
+		
+	}
+	
 	public String getSongTitle() {
 		return songTitle;
 	}
@@ -32,6 +37,10 @@ public class Song {
 	}
 	
 	public String toString() {
+		return songNumber + "," + songTitle + "," + songURL + "," +songExtension + "\n";
+	}
+	
+	public String toStringExtended() {
 		return "SONG #" + songNumber + "\n" +
 			   "TITLE: " + songTitle + "\n" +
 			   "URL: " + songURL + "\n" +
