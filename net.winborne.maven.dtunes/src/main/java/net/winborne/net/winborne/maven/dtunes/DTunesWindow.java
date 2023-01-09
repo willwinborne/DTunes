@@ -217,7 +217,6 @@ public class DTunesWindow extends JFrame {
 						e1.printStackTrace();
 					}
 
-
 				}
 
 			}
@@ -226,6 +225,9 @@ public class DTunesWindow extends JFrame {
 		m2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("JMenuBar interacted - import playlist...");
+//				if (playlist.size() > 0) {
+//					((DefaultTableModel) table.getModel()).setRowCount(0);
+//				}
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(m2) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -241,24 +243,22 @@ public class DTunesWindow extends JFrame {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+
 					for (String s : contents) {
 						System.out.println(s);
 					}
-					
+
 					for (int i = 0; i < contents.size(); i++) {
-						System.out.println("[INFO] IMPORT: i = " + i + "/n" + "[INFO] IMPORT: contents.size(): " + contents.size());
+						System.out.println("[INFO] IMPORT: i = " + i + "/n" + "[INFO] IMPORT: contents.size(): "
+								+ contents.size());
 						String[] songContents = contents.get(i).split(",");
-						Song s = new Song(Integer.parseInt(songContents[0]), songContents[1], songContents[2], songContents[3]);
+						Song s = new Song(Integer.parseInt(songContents[0]), songContents[1], songContents[2],
+								songContents[3]);
 						saveSong(s.getSongTitle(), s.getSongURL());
 					}
-					
-					
-					
+
 				}
 
-						
-						
 			}
 		});
 		x.add(m1);
@@ -372,6 +372,11 @@ public class DTunesWindow extends JFrame {
 		panel.add(lblNewLabel_3, "cell 0 9");
 
 		JButton btnNewButton_2 = new JButton("Apply playlist!");
+		btnNewButton_2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+
+			}
+		});
 		btnNewButton_2.setPreferredSize(new Dimension(100, 20));
 		panel.add(btnNewButton_2, "cell 0 10");
 
