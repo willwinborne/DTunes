@@ -17,6 +17,7 @@ public class RunnableProgressDialogUpdater implements Runnable {
 			br = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
+			
 		}
 		String last = "";
 		String line = "";

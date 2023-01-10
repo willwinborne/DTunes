@@ -69,6 +69,7 @@ public class DTunesWindow extends JFrame {
 	private static Boolean songIsDownloading = false;
 	private static ArrayList<Song> playlist;
 	private static Song song;
+	private static int songIndex = 0;
 
 	/**
 	 * Dispose of the YouTubeLinkDialog. Also shuts down the pinner runnable.
@@ -132,6 +133,16 @@ public class DTunesWindow extends JFrame {
 	}
 
 	public static Song getSong() {
+		
+		if (song == null) {
+			song = playlist.get(0);
+			songIndex++;
+			return song;
+		}
+		
+		song = playlist.get(songIndex);
+		songIndex++;
+		System.out.println("[INFO] Main window giving song to dlman: " + song.getSongTitle());
 		return song;
 	}
 
@@ -272,13 +283,8 @@ public class DTunesWindow extends JFrame {
 
 		setContentPane(contentPane);
 
-		DefaultListModel<String> listModel = new DefaultListModel<>();
-		listModel.addElement("USA");
-		listModel.addElement("USB");
-		listModel.addElement("USC");
-		System.out.println("Working Directory = " + System.getProperty("user.dir"));
+		System.out.println("[INFO] Working Directory = " + System.getProperty("user.dir"));
 		contentPane.setLayout(new MigLayout("", "[60][2000]", "[]"));
-		Dimension d = new Dimension(300, 470);
 
 		JPanel panel = new JPanel();
 		contentPane.add(panel, "cell 0 0,grow");
