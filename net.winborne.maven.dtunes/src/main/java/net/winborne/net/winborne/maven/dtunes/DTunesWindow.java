@@ -125,6 +125,7 @@ public class DTunesWindow extends JFrame {
 	}
 
 	public static void signalSongIsDownloading() {
+		System.out.println("[INFO] A song is ready to download. Starting up a progress executor.");
 		songIsDownloading = true;
 		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
 		executor = Executors.newScheduledThreadPool(1);

@@ -20,7 +20,9 @@ public class RunnableYouTubeDownloadManager implements Runnable {
 		if (!DTunesWindow.getSongIsDownloading()) {
 			DTunesWindow.signalSongIsDownloading();
 			Song song = DTunesWindow.getSong();
-			System.out.println("DTunes isn't currently downloading a song. I am going to try to download " + song.getSongTitle() + ".");
+			System.out.println();
+			System.out.println();
+			System.out.println("***DTunes isn't currently downloading a song. I am going to try to download " + song.getSongTitle() + ".***");
 
 			File file = new File("youtube-dl-log.txt");
 
