@@ -85,7 +85,7 @@ public class DTunesWindow extends JFrame {
 	 * object and save it to the playlist.
 	 */
 	public static void saveSong(String songTitle, String songURL) {
-		if (table.getValueAt(0, 1) == "No songs added!") {
+		if (table.getValueAt(0, 1) == "No songs added!" && table.getValueAt(0, 0) == "N/A") {
 			model.removeRow(0);
 			model.insertRow(0, new Object[] { table.getRowCount() + 1, songTitle, songURL, ".m4a" });
 		} else {
@@ -225,9 +225,15 @@ public class DTunesWindow extends JFrame {
 		m2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				System.out.println("JMenuBar interacted - import playlist...");
-//				if (playlist.size() > 0) {
-//					((DefaultTableModel) table.getModel()).setRowCount(0);
-//				}
+				// clear table
+//				if (table.getValueAt(0, 1) == "No songs added!" && table.getValueAt(0, 0) == "N/A") {
+//					for (int i = 0; i < table.getRowCount(); i++) {
+//						
+//						model.removeRow(i);
+//					}
+//					playlist.clear();
+					
+				//}
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(m2) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -244,13 +250,8 @@ public class DTunesWindow extends JFrame {
 						e1.printStackTrace();
 					}
 
-					for (String s : contents) {
-						System.out.println(s);
-					}
-
 					for (int i = 0; i < contents.size(); i++) {
-						System.out.println("[INFO] IMPORT: i = " + i + "/n" + "[INFO] IMPORT: contents.size(): "
-								+ contents.size());
+						System.out.println("[INFO] IMPORT: " + (i + 1) + " / " + contents.size() + " songs imported");
 						String[] songContents = contents.get(i).split(",");
 						Song s = new Song(Integer.parseInt(songContents[0]), songContents[1], songContents[2],
 								songContents[3]);
@@ -331,7 +332,7 @@ public class DTunesWindow extends JFrame {
 					public void run() {
 						try {
 
-							if (table.getValueAt(0, 1) == "No songs added!") {
+							if (table.getValueAt(0, 1) == "No songs added!" && table.getValueAt(0, 0) == "N/A") {
 								JOptionPane.showMessageDialog(null, "Add a song from YouTube first.", "No songs added",
 										JOptionPane.ERROR_MESSAGE);
 								return;
