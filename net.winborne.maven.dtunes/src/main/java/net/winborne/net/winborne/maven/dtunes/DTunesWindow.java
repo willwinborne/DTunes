@@ -119,25 +119,39 @@ public class DTunesWindow extends JFrame {
 	}
 
 	public static void signalSongDoneDownloading() {
+		System.out.println("[INFO] A song is done downloading. Shutting down the progress executor.");
 		songIsDownloading = false;
-		executor.shutdown();
-		playlist.remove(song);
+		executor.shutdownNow();
 	}
 
 	public static void signalSongIsDownloading() {
 		songIsDownloading = true;
 		RunnableProgressDialogUpdater rpdu = new RunnableProgressDialogUpdater();
-		rpdu.run();
 		executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 	}
+	
+	public static void debugPlaylist() {
+		System.out.println("[INFO] Current playlist:");
+		for (Song s : playlist) {
+			System.out.println(s.getSongTitle());
+		}
+	}
 
 	public static Song getSong() {
+
 		
 		if (song == null) {
 			song = playlist.get(0);
 			songIndex++;
 			return song;
+		}
+		
+		if (songIndex == playlist.size()) {
+			dlmanExecutor.shutdown();
+			System.out.println("[INFO] Last song has finished downloading, shutting down the dlman executor and the download dialog.");
+			downloaderIsOpen = false;
+			frame.dispose();
 		}
 		
 		song = playlist.get(songIndex);

@@ -22,22 +22,25 @@ public class RunnableProgressDialogUpdater implements Runnable {
 		String last = "";
 		String line = "";
 		try {
-			while ((line = br.readLine()) != null) {
-				last = line;
-				char[] lastArray = last.toCharArray();
-				String progress = "";
-				if (last.length() > 0) {
-					for (int i = 12; i <= 15; i++) {
-						progress += lastArray[i];
+				while ((line = br.readLine()) != null) {
+					if (line.contains("%")) {
+					last = line;
+					char[] lastArray = last.toCharArray();
+					String progress = "";
+					if (last.length() > 0) {
+						for (int i = 12; i <= 15; i++) {
+							progress += lastArray[i];
+						}
+					}
+					DTunesProgressDialog.setProgress(progress);
+
+					if (progress.equals("00% ")) {
+						System.out.println("A video is done downloading");
+						DTunesWindow.signalSongDoneDownloading();
 					}
 				}
-				DTunesProgressDialog.setProgress(progress);
-
-				if (progress.equals("00% ")) {
-					System.out.println("A video is done downloading");
-					DTunesWindow.signalSongDoneDownloading();
-				}
 			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
