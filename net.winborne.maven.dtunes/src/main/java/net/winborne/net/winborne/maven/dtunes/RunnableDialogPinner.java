@@ -6,10 +6,10 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
-public class RunnableYouTubeLinkDialogPinner implements Runnable {
+public class RunnableDialogPinner implements Runnable {
 
 	@Override
 	public void run() {
-		DTunesWindow.pinYouTubeLinkDialog();
+		DTunesWindow.pinDialog();
 	}
 }

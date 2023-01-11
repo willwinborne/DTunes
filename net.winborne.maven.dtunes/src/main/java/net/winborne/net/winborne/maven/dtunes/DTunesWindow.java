@@ -87,7 +87,7 @@ public class DTunesWindow extends JFrame {
 	 * Pins the existing dialog to the main window. Meant to be called by a runnable
 	 * with a scheduled executor service.
 	 */
-	public static void pinYouTubeLinkDialog() {
+	public static void pinDialog() {
 		if (linkDialogIsOpen) {
 			frame2.setLocation(
 					DTunesWindow.getFrames()[0].getX()
@@ -330,7 +330,7 @@ public class DTunesWindow extends JFrame {
 								frame2.setUndecorated(true);
 								frame2.setVisible(true);
 								frame2.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
-								RunnableYouTubeLinkDialogPinner runnablePinner = new RunnableYouTubeLinkDialogPinner();
+								RunnableDialogPinner runnablePinner = new RunnableDialogPinner();
 								runnablePinner.run();
 								pinnerExecutor = Executors.newScheduledThreadPool(1);
 								pinnerExecutor.scheduleAtFixedRate(runnablePinner, 0, 1, TimeUnit.MILLISECONDS);
@@ -369,7 +369,7 @@ public class DTunesWindow extends JFrame {
 								frame.setUndecorated(true);
 								frame.setVisible(true);
 								frame.getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GRAY));
-								RunnableYouTubeLinkDialogPinner runnablePinnerForDownloader = new RunnableYouTubeLinkDialogPinner();
+								RunnableDialogPinner runnablePinnerForDownloader = new RunnableDialogPinner();
 								runnablePinnerForDownloader.run();
 								pinnerExecutorForDownloader = Executors.newScheduledThreadPool(1);
 								pinnerExecutorForDownloader.scheduleAtFixedRate(runnablePinnerForDownloader, 0, 1,
