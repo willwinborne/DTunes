@@ -40,21 +40,29 @@ import javax.swing.JScrollPane;
 @SuppressWarnings("serial")
 public class DTunesWindow extends JFrame {
 
+	// ui
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
 	private static DTunesYouTubeLinkDialog frame2;
 	private static JTable table;
 	private static DefaultTableModel model;
+
+	// services
 	private static ScheduledExecutorService executor;
 	private static ScheduledExecutorService pinnerExecutor;
 	private static ScheduledExecutorService dlmanExecutor;
 	private static ScheduledExecutorService pinnerExecutorForDownloader;
+
+	// program state
 	private static Boolean downloaderIsOpen = false;
 	private static Boolean linkDialogIsOpen = false;
 	private static Boolean songIsDownloading = false;
 	private static ArrayList<Song> playlist;
 	private static Song song;
 	private static int songIndex = 0;
+	
+	// developer
+	private static String testPlaylistLocation = "C:\\Users\\willw\\OneDrive\\Desktop\\testPlaylist.txt";
 
 	/**
 	 * Dispose of the YouTubeLinkDialog. Also shuts down the pinner runnable.
@@ -124,7 +132,7 @@ public class DTunesWindow extends JFrame {
 		executor = Executors.newScheduledThreadPool(1);
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 	}
-	
+
 	/**
 	 * Print the entire playlist
 	 */
@@ -137,6 +145,7 @@ public class DTunesWindow extends JFrame {
 
 	/**
 	 * Called by external classes to retrieve the song to download
+	 * 
 	 * @return
 	 */
 	public static Song getSong() {
@@ -146,14 +155,15 @@ public class DTunesWindow extends JFrame {
 			songIndex++;
 			return song;
 		}
-		
+
 		if (songIndex == playlist.size()) {
 			dlmanExecutor.shutdown();
-			System.out.println("[INFO] Last song has finished downloading, shutting down the dlman executor and the download dialog.");
+			System.out.println(
+					"[INFO] Last song has finished downloading, shutting down the dlman executor and the download dialog.");
 			downloaderIsOpen = false;
 			frame.dispose();
 		}
-		
+
 		song = playlist.get(songIndex);
 		songIndex++;
 		System.out.println("[INFO] Main window giving song to dlman: " + song.getSongTitle());
@@ -162,6 +172,7 @@ public class DTunesWindow extends JFrame {
 
 	/**
 	 * Tells whether DTunes is currently downloading a song.
+	 * 
 	 * @return
 	 */
 	public static Boolean getSongIsDownloading() {
@@ -171,6 +182,7 @@ public class DTunesWindow extends JFrame {
 	/**
 	 * Convert the downloaded song into an mp3
 	 */
+	@SuppressWarnings("unused")
 	private static Boolean convertSongFromWebmToMp3(String filename) {
 		boolean succeeded = true;
 		ConvertProgressDialogUpdater listener = new ConvertProgressDialogUpdater();
@@ -217,6 +229,47 @@ public class DTunesWindow extends JFrame {
 		setJMenuBar(menuBar);
 
 		JMenu x = new JMenu("Export and import");
+		JMenu y = new JMenu("Developer");
+
+		final JMenuItem o1 = new JMenuItem("Kill youtube-dl processes");
+		o1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					Runtime.getRuntime().exec("taskkill /F /IM youtube-dl.exe");
+				} catch (IOException ex) {
+					// TODO Auto-generated catch block
+					ex.printStackTrace();
+				}
+			}
+		});
+		
+		final JMenuItem o2 = new JMenuItem("Import test playlist");
+		o2.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ArrayList<String> contents = new ArrayList<String>();
+				File f = new File(testPlaylistLocation);
+				try {
+					Scanner sca = new Scanner(f);
+					while (sca.hasNextLine()) {
+						contents.add(sca.nextLine());
+					}
+					sca.close();
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
+				for (int i = 0; i < contents.size(); i++) {
+					System.out.println("[INFO] IMPORT: " + (i + 1) + " / " + contents.size() + " songs imported");
+					String[] songContents = contents.get(i).split(",");
+					Song s = new Song(Integer.parseInt(songContents[0]), songContents[1], songContents[2],
+							songContents[3]);
+					saveSong(s.getSongTitle(), s.getSongURL());
+				}
+
+			}
+		});
+
 
 		final JMenuItem m1 = new JMenuItem("Export current playlist to zip file...");
 		m1.addActionListener(new ActionListener() {
@@ -261,8 +314,8 @@ public class DTunesWindow extends JFrame {
 //						model.removeRow(i);
 //					}
 //					playlist.clear();
-					
-				//}
+
+				// }
 				JFileChooser fileChooser = new JFileChooser();
 				if (fileChooser.showOpenDialog(m2) == JFileChooser.APPROVE_OPTION) {
 					File file = fileChooser.getSelectedFile();
@@ -293,7 +346,10 @@ public class DTunesWindow extends JFrame {
 		});
 		x.add(m1);
 		x.add(m2);
+		y.add(o1);
+		y.add(o2);
 		menuBar.add(x);
+		menuBar.add(y);
 
 		contentPane = new JPanel();
 		contentPane.setPreferredSize(new Dimension(100, 00));

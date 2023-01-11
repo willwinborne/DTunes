@@ -46,7 +46,6 @@ public class DTunesYouTubeLinkDialog extends JFrame {
 	private static ScheduledExecutorService executor;
 	private static String videoID = "";
 	private static String videoTitle = "";
-	private JLabel lblNewLabel_1;
 	private static JLabel iconLabel;
 
 	/**
