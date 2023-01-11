@@ -1,11 +1,9 @@
 package net.winborne.net.winborne.maven.dtunes;
 
 import javax.swing.BorderFactory;
-import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -17,17 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.lang.ProcessBuilder.Redirect;
-import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -49,12 +37,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 
-import java.io.ByteArrayInputStream;
-
 @SuppressWarnings("serial")
 public class DTunesWindow extends JFrame {
 
-	private static final int FIXED_WIDTH = 650;
 	private JPanel contentPane;
 	private static DTunesProgressDialog frame;
 	private static DTunesYouTubeLinkDialog frame2;
@@ -118,12 +103,20 @@ public class DTunesWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Called by external classes to signal that a song is finished downloading.
+	 * This shuts down the progress updater runnable scheduler.
+	 */
 	public static void signalSongDoneDownloading() {
 		System.out.println("[INFO] A song is done downloading. Shutting down the progress executor.");
 		songIsDownloading = false;
 		executor.shutdownNow();
 	}
 
+	/**
+	 * Called by external classes to signal that a song is currently downloading.
+	 * Also starts the progress updater runnable scheduler.
+	 */
 	public static void signalSongIsDownloading() {
 		System.out.println("[INFO] A song is ready to download. Starting up a progress executor.");
 		songIsDownloading = true;
@@ -132,6 +125,9 @@ public class DTunesWindow extends JFrame {
 		executor.scheduleAtFixedRate(rpdu, 0, 1000, TimeUnit.MILLISECONDS);
 	}
 	
+	/**
+	 * Print the entire playlist
+	 */
 	public static void debugPlaylist() {
 		System.out.println("[INFO] Current playlist:");
 		for (Song s : playlist) {
@@ -139,9 +135,12 @@ public class DTunesWindow extends JFrame {
 		}
 	}
 
+	/**
+	 * Called by external classes to retrieve the song to download
+	 * @return
+	 */
 	public static Song getSong() {
 
-		
 		if (song == null) {
 			song = playlist.get(0);
 			songIndex++;
@@ -161,6 +160,10 @@ public class DTunesWindow extends JFrame {
 		return song;
 	}
 
+	/**
+	 * Tells whether DTunes is currently downloading a song.
+	 * @return
+	 */
 	public static Boolean getSongIsDownloading() {
 		return songIsDownloading;
 	}

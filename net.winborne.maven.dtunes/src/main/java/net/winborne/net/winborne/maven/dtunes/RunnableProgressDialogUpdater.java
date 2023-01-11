@@ -17,16 +17,17 @@ public class RunnableProgressDialogUpdater implements Runnable {
 			br = new BufferedReader(new FileReader(file));
 		} catch (FileNotFoundException e1) {
 			e1.printStackTrace();
-			
 		}
 		String last = "";
 		String line = "";
 		try {
 				while ((line = br.readLine()) != null) {
+					
 					if (line.contains("%")) {
 					last = line;
 					char[] lastArray = last.toCharArray();
 					String progress = "";
+					
 					if (last.length() > 0) {
 						for (int i = 12; i <= 15; i++) {
 							progress += lastArray[i];
@@ -39,7 +40,6 @@ public class RunnableProgressDialogUpdater implements Runnable {
 					}
 				}
 			}
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

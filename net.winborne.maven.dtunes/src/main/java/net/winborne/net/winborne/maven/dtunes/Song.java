@@ -12,7 +12,6 @@ public class Song {
 		songURL = songURLIn;
 		songExtension = songExtensionIn;
 		songNumber = songNumberIn;
-		
 	}
 	
 	// overloaded constructor
