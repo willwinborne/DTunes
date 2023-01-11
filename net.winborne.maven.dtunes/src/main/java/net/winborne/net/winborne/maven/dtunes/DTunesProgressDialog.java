@@ -39,7 +39,7 @@ public class DTunesProgressDialog extends JFrame {
 		setAlwaysOnTop(true);
 		setTitle("Downloading song...");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 350, 140);
+		setBounds(100, 100, 370, 140);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -57,8 +57,11 @@ public class DTunesProgressDialog extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("");
 		contentPane.add(lblNewLabel_1, "flowx,cell 1 3");
 		
-		JLabel lblNewLabel_3 = new JLabel("Song 3 of 8");
+		JLabel lblNewLabel_3 = new JLabel("Song x of y");
 		contentPane.add(lblNewLabel_3, "cell 1 4");
+		
+		JLabel lblNewLabel_2_1 = new JLabel("ETA:");
+		contentPane.add(lblNewLabel_2_1, "cell 2 4,alignx right");
 		
 		JProgressBar progressBar_1 = new JProgressBar();
 		progressBar_1.setPreferredSize(new Dimension(1000, 50));
