@@ -78,21 +78,16 @@ public class DTunesProgressDialog extends JFrame {
 	 * @param progressIn
 	 */
 	public static void setProgress(String progressIn, String fileSizeIn, String downloadSpeedIn, String etaIn) {
-		System.out.println("Parsing progress string " + progressIn);
 		try {
 			progress = Double.parseDouble(progressIn);
 			progressBar.setValue((int) Math.round(Double.parseDouble(progressIn)));
 			progressBar_1.setValue((int) DTunesWindow.getTotalDownloadProgress());
 			lblNewLabel_3.setText(DTunesWindow.getTotalDownloadProgressAsString());
-			System.out.println(DTunesWindow.getTotalDownloadProgressAsString());
 			lblNewLabel_2.setText("Speed: " + downloadSpeedIn);
-			System.out.println("Speed: " + downloadSpeedIn);
 			lblNewLabel_2_1.setText("ETA: " + etaIn);
-			System.out.println("ETA: " + etaIn);
 			lblNewLabel.setText(DTunesWindow.getSongTitle());
-			
 		} catch (Exception e) {
-			System.out.println("someting bad happen" + e);
+			System.out.println("Caught exception while parsing progress: " + e);
 		}
 	}
 	
