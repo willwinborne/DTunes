@@ -15,6 +15,11 @@ public class DTunesProgressDialog extends JFrame {
 	private JPanel contentPane;
 	private static double progress = 0;
 	private static JProgressBar progressBar;
+	private static JProgressBar progressBar_1;
+	private static JLabel lblNewLabel;
+	private static JLabel lblNewLabel_3;
+	private static JLabel lblNewLabel_2;
+	private static JLabel lblNewLabel_2_1;
 	private static DTunesProgressDialog frame;
 
 	/**
@@ -45,10 +50,10 @@ public class DTunesProgressDialog extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(new MigLayout("", "[50][50][]", "[14][14px][][14][][14]"));
 		
-		JLabel lblNewLabel = new JLabel("Downloading ");
+		lblNewLabel = new JLabel("Starting download...");
 		contentPane.add(lblNewLabel, "flowx,cell 1 0");
 		
-		JLabel lblNewLabel_2 = new JLabel("Speed:");
+		lblNewLabel_2 = new JLabel("");
 		contentPane.add(lblNewLabel_2, "cell 2 0,alignx right");
 		progressBar = new JProgressBar();
 		progressBar.setPreferredSize(new Dimension(1000, 50));
@@ -57,13 +62,13 @@ public class DTunesProgressDialog extends JFrame {
 		JLabel lblNewLabel_1 = new JLabel("");
 		contentPane.add(lblNewLabel_1, "flowx,cell 1 3");
 		
-		JLabel lblNewLabel_3 = new JLabel("Song x of y");
+		lblNewLabel_3 = new JLabel("");
 		contentPane.add(lblNewLabel_3, "cell 1 4");
 		
-		JLabel lblNewLabel_2_1 = new JLabel("ETA:");
+		lblNewLabel_2_1 = new JLabel("");
 		contentPane.add(lblNewLabel_2_1, "cell 2 4,alignx right");
 		
-		JProgressBar progressBar_1 = new JProgressBar();
+		progressBar_1 = new JProgressBar();
 		progressBar_1.setPreferredSize(new Dimension(1000, 50));
 		contentPane.add(progressBar_1, "cell 0 5 3 1");
 	}
@@ -72,17 +77,22 @@ public class DTunesProgressDialog extends JFrame {
 	 * Update the progress bar of the song that is downloading.
 	 * @param progressIn
 	 */
-	public static void setProgress(String progressIn) {
+	public static void setProgress(String progressIn, String fileSizeIn, String downloadSpeedIn, String etaIn) {
 		System.out.println("Parsing progress string " + progressIn);
-		//if (progressIn == "00% ") {
-		//	System.out.println("A video is done downloading");
-		//	DTunesWindow.signalSongDoneDownloading();
-		//}
 		try {
 			progress = Double.parseDouble(progressIn);
 			progressBar.setValue((int) Math.round(Double.parseDouble(progressIn)));
+			progressBar_1.setValue((int) DTunesWindow.getTotalDownloadProgress());
+			lblNewLabel_3.setText(DTunesWindow.getTotalDownloadProgressAsString());
+			System.out.println(DTunesWindow.getTotalDownloadProgressAsString());
+			lblNewLabel_2.setText("Speed: " + downloadSpeedIn);
+			System.out.println("Speed: " + downloadSpeedIn);
+			lblNewLabel_2_1.setText("ETA: " + etaIn);
+			System.out.println("ETA: " + etaIn);
+			lblNewLabel.setText(DTunesWindow.getSongTitle());
+			
 		} catch (Exception e) {
-			//System.out.println("Streaming letters, probably...");
+			System.out.println("someting bad happen" + e);
 		}
 	}
 	

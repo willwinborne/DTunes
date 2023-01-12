@@ -25,6 +25,13 @@ public class RunnableProgressDialogUpdater implements Runnable {
 					
 					if (line.contains("%")) {
 					last = line;
+					
+					String[] progressArray = last.split(" ");
+					String fileSize = progressArray[4];
+					String downloadSpeed = progressArray[6];
+					String eta = progressArray[8];
+					
+					
 					char[] lastArray = last.toCharArray();
 					String progress = "";
 					
@@ -33,7 +40,7 @@ public class RunnableProgressDialogUpdater implements Runnable {
 							progress += lastArray[i];
 						}
 					}
-					DTunesProgressDialog.setProgress(progress);
+					DTunesProgressDialog.setProgress(progress, fileSize, downloadSpeed, eta);
 
 					if (progress.equals("00% ")) {
 						DTunesWindow.signalSongDoneDownloading();

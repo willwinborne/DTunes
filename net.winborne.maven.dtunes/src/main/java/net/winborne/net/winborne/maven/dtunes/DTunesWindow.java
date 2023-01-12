@@ -142,6 +142,19 @@ public class DTunesWindow extends JFrame {
 			System.out.println(s.getSongTitle());
 		}
 	}
+	
+	
+	public static double getTotalDownloadProgress() {
+		return (songIndex + 1) / playlist.size();
+	}
+	
+	public static String getTotalDownloadProgressAsString() {
+		return "Song " + songIndex + " of " + playlist.size();
+	}
+	
+	public static String getSongTitle() {
+		return song.getSongTitle();
+	}
 
 	/**
 	 * Called by external classes to retrieve the song to download
