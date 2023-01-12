@@ -23,7 +23,7 @@ public class RunnableProgressDialogUpdater implements Runnable {
 		try {
 				while ((line = br.readLine()) != null) {
 					
-					if (line.contains("%")) {
+					if (line.contains("ETA")) {
 					last = line;
 					
 					String[] progressArray = last.split(" ");
